@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kadanes Algorithm</title>
+</head>
+<body>
+    <script>
+        // we will use kadane's algorithm to find maximum sum subArray 
+
+        // Q. Given an integer array nums, find the subarray with the largest sum, and return its sum.
+        // input : [-2, 1, -3, 4, -1, 2, 1, -5, 4] output: 6 [4,-1,2,1]
+        // input : [5,4,-1,7,8] output: 23 output: [5,4,-1,7,8]
+
+
+        // // first way 
+        // // using Brute force approach
+        // // Time complexity for this is O(n^2)
+        // // Space Complexity for this is O(1) because we are not creating new array we just returing value from the function. 
+        
+        function maxSubArray(nums){
+            let maxSum = 0;
+            let currentSum = 0
+            let startInd = 0;
+            let endInd = 0;
+
+            for(let i=0; i<nums.length; i++){
+                currentSum = nums[i];
+
+                if (currentSum > maxSum) {
+                    maxSum = currentSum;
+                    startInd = i;
+                    endInd = i;
+                }
+        
+                for(let j=i+1; j<nums.length; j++){
+                    currentSum = currentSum + nums[j]
+                    if(currentSum > maxSum){
+                        maxSum = currentSum;
+                        startInd = i;
+                        endInd = j;
+                    }
+                }
+            }
+        
+            return {
+                sum: maxSum,
+                subArray: nums.slice(startInd, endInd+1)
+            }
+        }
+
+        
+        console.log(maxSubArray([5,4,-1,7,8])); // {sum: 23, subArray: [5,4,-1,7,8]}
+        console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // {sum: 6, subArray: [4,-1,2,1]}
+        
+// ------------------------------------------------------------------------------------------------------------
+
+        // using Kadanes algorithm
+        function maxSubArray(arr){
+            let sum = 0;
+            let maxSum = arr[0];
+            
+            for(let i = 1; i < arr.length; i++){
+                sum = sum + arr[i];
+                maxSum = Math.max(sum, maxSum)
+
+                if(sum < 0){
+                    sum = 0;
+                }
+            }
+
+            return maxSum;
+        }
+
+        let arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4];
+        console.log(maxSubArray(arr)); // 6
+
+// -----------------------------------------------------------------------------------
+
+        // Second Way 
+        // now we will use kadanes algorithm 
+        function maxSubArray(arr){
+            let maxSum = 0;
+            let currSum = 0;
+            let startInd = 0;
+            let endInd = 0;
+            
+            for(let i=0; i<arr.length; i++){
+                currSum += arr[i];
+
+                // now we will check two conditions in that
+                if(currSum > maxSum){
+                    maxSum = currSum;
+                    endInd = i;
+                }
+
+                if(currSum < 0){
+                    currSum = 0;
+                    startInd = i;
+                }
+            }
+
+            // if all elements are negative then we will use this condition and return -1;
+            if(maxSum === 0){
+                return -1;
+            }
+
+            return {
+                sum: maxSum,
+                subArr: arr.slice(startInd+1, endInd+1),
+            };
+        }
+        
+        // console.log(maxSubArray([5,4,-1,7,8])); // { sum: 23, subArr: [ 5, 4, -1, 7, 8 ] }
+        // console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // { sum: 6, subArr: [ -3, 4, -1, 2, 1 ] }
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+    
+        // Third Way 
+        function maxSubArray(nums){
+            let sum = nums[0];
+
+            for(let i=1; i<nums.length;i++){
+                nums[i] = Math.max(nums[i], nums[i]+nums[i-1])
+                sum = Math.max(sum, nums[i])
+            }
+
+            return sum
+        }
+        console.log(maxSubArray([5,4,-1,7,8])); // 23 // the error was spell mistake of length 
+    
+// -----------------------------------------------------------------------------------------------------------------------
+        
+        // Fourth Way 
+        // Time Complexity - O(n), because we are using only one for loop
+        // function maxSubArray(nums) {
+        //     let maxSum = nums[0]
+        //     let currSum = nums[0]
+
+        //     for(let i=1; i<nums.length; i++){
+        //         currSum = Math.max(nums[i], nums[i]+currSum)
+        //         maxSum = Math.max(currSum, maxSum)
+        //     }
+
+        //     return maxSum
+        // }
+
+        // console.log(maxSubArray([5,4,-1,7,8])); // 23
+    </script>
+</body>
+</html>

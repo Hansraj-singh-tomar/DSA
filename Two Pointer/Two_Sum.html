@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Sum Problem of DSA</title>
+</head>
+<body>
+    <h1>Two Sum Problem of DSA</h1>
+    <script>
+
+        // Using Hash Map
+        // function twoSum(arr, target){
+        //     const mymap = new Map();
+        //     for(let i = 0; i < arr.length; i++){
+        //         const complement = target - arr[i];
+        //         if(mymap.has(complement)){
+        //             return [mymap.get(complement), i]      
+        //         }
+        //         mymap.set(arr[i], i);
+        //     }
+        // }
+        // let arr = [2,7,4,6];
+        // let target = 10;
+        // let indices = twoSum(arr, target);
+        // console.log(indices);
+
+
+        // Using loops
+        // let arr = [2,7,11,18];
+        let arr = [2,7,25,16,9];
+        let target = 18;
+        function twoSum(arr, target){
+            let ans = [];
+            for(let i = 0; i < arr.length; i++){
+                for(let j = i+1; j < arr.length; j++){
+                    if(arr[i]+arr[j] === target){
+                        ans.push(i);
+                        ans.push(j);
+                    }
+                }
+            }
+            return ans
+        }
+        console.log(twoSum(arr, target));
+
+
+        // using object 
+        // function twoSum(arr, target) {
+        //     let obj = {};
+        //     for (let i = 0; i < arr.length; i++) {
+        //         let complement = target - arr[i];
+        //         if (obj.hasOwnProperty(complement)) {
+        //             return [obj[complement], i]
+        //         }
+        //         obj[arr[i]] = i;
+        //     }
+
+        //     return [];
+        // }
+        // let arr = [2, 7, 25, 16, 9];
+        // let target = 18;
+        // console.log(twoSum(arr, target));
+
+
+        // Facing error while working with map method
+
+        // // let arr = [2,7,25,16,9]; 
+        // let arr = [2,7,9,16,25]; 
+        // let target = 16;
+        // function twoSum(arr, target){
+        //     let map = new Map();
+        //     for(let i = 0; i < arr.length; i++){
+        //         let complement = target - arr[i];
+        //         if(map.has(complement)){
+        //             return [map.get(complement), i]
+        //         }
+        //         map.set(arr[i], i);                      
+        //         // map.set(complement, i);                      
+        //     }
+        // }
+        // console.log(twoSum(arr, target));
+
+
+        // using two pointers approach 
+
+        // time complexit is O(n)
+        // function twoSum(arr, target, start, end) {
+        //     arr = arr.sort((a, b) => a - b)
+
+        //     while (start < end) {
+        //         const sum = arr[start] + arr[end];
+        //         if (sum == target) {
+        //             return [arr[start], arr[end]]
+        //         } else if (sum > target) {
+        //             end--;
+        //         } else {
+        //             start++;
+        //         }
+        //     }
+
+        //     return [];
+        // }
+
+        // let arr = [2, 7, 25, 16, 9];
+        // let target = 18;
+        // console.log(twoSum(arr, target, 0, arr.length - 1));
+    </script>
+</body>
+</html>
+
+
+<!-- 
+    two sum 
+    three sum
+    container with most water
+    missing number 
+    rotate array k time
+ -->

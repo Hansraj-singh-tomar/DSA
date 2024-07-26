@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Reverse Array With Recursion</title>
+    <script>
+        let data = [1,2,3,4,5];
+
+        // Default function for reverse arrray.
+        console.log(data.reverse());
+        
+        let temp;
+        function customReverse(data,start,end){
+            // console.log(data);
+            if(start<=end){
+                temp = data[start];
+                data[start] = data[end];
+                data[end] = temp;
+                customReverse(data,start+1,end-1);
+            }
+            return data;
+        }
+        // customReverse(data,0,data.length-1);
+        console.log(customReverse(data,0,data.length-1)); //(5) [5,4,3,2,1]
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

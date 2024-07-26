@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Sort Using JS.</title>
+</head>
+
+<body>
+    <script>
+        const items = [15,20,3,9];
+        function quickSort(arr) {
+            if (arr.length <= 1) {
+                return arr;
+            }
+            let pivot = arr[arr.length - 1];
+            // console.log(pivot); // 9
+            let left = [];
+            let right = [];
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (arr[i] < pivot) {
+                    left.push(arr[i]);
+                } else {
+                    right.push(arr[i]);
+                }
+            }
+            // we are using recursion here
+            return [...quickSort(left), pivot, ...quickSort(right)];
+        }
+
+        console.log(quickSort(items));
+    </script>
+</body>
+
+</html>
+
+

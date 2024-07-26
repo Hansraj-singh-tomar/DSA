@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bubble Sort</title>
+    <script>
+        let data = [23,1,43,4];
+        console.log(data.length); // 6
+
+        for(let i=0;i<data.length-1;i++){
+            // console.log(data);
+            for(let j=0;j<data.length-1;j++){
+                // if(data[j]<data[j+1]){ // for Descending order
+                if(data[j]>data[j+1]){ // for accending order
+                    let temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+        }
+        console.log(data);
+        // hamara loop 36 times chla hai, length of data is 6 so, 6 * 6 = 36. 
+    </script>
+</head>
+<body>
+          
+</body>
+</html>

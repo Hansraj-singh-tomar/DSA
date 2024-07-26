@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reverse String using Recursion</title>
+  </head>
+  <body>
+    <!-- let str = "hello";
+    console.log(str.substr(1)) // ello -->
+    <script>
+      function reverseString(str) {
+        if (str === "") {
+          return "";
+        } else {
+          return reverseString(str.substr(1)) + str.charAt(0);
+        }
+      }
+      console.log(reverseString("say hello to xyz")); // olleh
+
+      // overview
+      // reverseString("hello") => reverseString("ello") + h
+      // reverseString("ello") => reverseString("llo") + e
+      // reverseString("llo") => reverseString("lo") + l
+      // reverseString("lo") => reverseString("o") + l
+      // reverseString("o") => reverseString("") + o
+      // reverse("") => ""
+      // so,
+      // reverseString("o") => reverseString("") + o
+      // reverseString("o") => "" + o => o
+
+      // reverseString("lo") => reverseString("o") + l
+      // reverseString("lo") => o + l => ol
+      // and so on
+    </script>
+  </body>
+</html>

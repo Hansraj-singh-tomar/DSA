@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insertion Sort Using JS.</title>
+  </head>
+
+  <body>
+    <script>
+      const items = [15, 20, 3, 9, 0]; // [0, 8, 9, 11, 15, 20, 24, 3]
+
+      function InsertionSort(data) {
+        for (let i = 1; i < data.length; i++) {
+          let current = data[i]; // 20
+          let j = i - 1; // 0
+          while (j >= 0 && data[j] > current) {
+            // 15 > 20
+            data[j + 1] = data[j];
+            j = j - 1;
+          }
+          data[j + 1] = current; // current = 20 so data[1] = 20
+        }
+      }
+
+      InsertionSort(items);
+      console.log(items);
+
+      // i just do it randomly and it's working fine
+      let arr = [12, 11, 13, 5, 6];
+      function InsertionSort(arr) {
+        for (let i = 1; i < arr.length; i++) {
+          for (let j = i; j >= 0; j--) {
+            if (arr[j] < arr[j - 1]) {
+              let temp = arr[j];
+              arr[j] = arr[j - 1];
+              arr[j - 1] = temp;
+            }
+          }
+        }
+      }
+
+      InsertionSort(arr);
+      console.log(arr);
+    </script>
+  </body>
+</html>
+
+<!-- // [15,20,24,3,9,11,0,8]
+// [0,8,9,11,15,20,24,3] -->

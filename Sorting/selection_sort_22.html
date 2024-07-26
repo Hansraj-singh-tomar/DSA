@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Selection Sort</title>
+    <script>
+        let items = [23,1,43,54];
+        // In selection sort we sort the largest value at the end 
+        // In Ascending Order - 2,3,4,5,6
+        function selectionSort(data){
+            let minValId;
+            for(i=0;i<data.length;i++){
+                minValId = i;
+                for(j=i+1; j<data.length; j++){
+                    if(data[j] < data[minValId]){
+                        minValId = j;
+                    }
+                }
+                // finding the smallest element and putting it 
+                let temp = data[minValId];
+                data[minValId] = data[i];
+                data[i] = temp; 
+            }
+        }
+        selectionSort(items);
+        console.log(items);
+
+        // In Descending Order - 10, 8, 6, 4, 2 
+        // function selectionSort(data){
+        //     let maxId;
+        //     for(i=0;i<data.length;i++){
+        //         maxId = i;
+        //         for(let j=i+1;j<data.length;j++){
+        //             if(data[j]>data[maxId]){
+        //                 maxId = j;
+        //             }
+        //         }
+        //         let temp = data[maxId];
+        //         data[maxId] = data[i];
+        //         data[i] = temp;
+        //     }
+        // } 
+        // selectionSort(items);
+        // console.log(items);
+    </script>
+</head>
+<body>
+          
+</body>
+</html>
