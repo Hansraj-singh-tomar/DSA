@@ -20,5 +20,3 @@ function numAppearOnce(arr) {
 
 let arr = [1, 1, 2, 3, 3, 4, 4];
 console.log(numAppearOnce(arr)); // 2
-
-// 12, 1, 2, 3, 4, 5, 6, 7, 8, 9
