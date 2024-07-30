@@ -49,6 +49,6 @@ function subArr(arr) {
     return maxSum;
 }
 
-let arr = [4, -6, 2, 8];
-console.log(subArr(arr)); // 10
+let arr1 = [4, -6, 2, 8];
+console.log(subArr(arr1)); // 10
 

@@ -61,4 +61,4 @@ function twoSum(arr, target, start, end) {
 
 let arr2 = [2, 7, 25, 16, 9];
 let target2 = 18;
-console.log(twoSum(arr2, target2, 0, arr.length - 1));
+console.log(twoSum(arr2, target2, 0, arr.length - 1)); // [2, 16]
