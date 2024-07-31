@@ -25,7 +25,7 @@ function unionOfSortedArr(arr1, arr2) {
     while (i < arr1.length && j < arr2.length) {
         if (arr1[i] <= arr2[j]) {
             if (arr1[i] !== union[k - 1]) {
-                union.push(arr1[i])
+                union.push(arr1[i]);
                 k++;
             }
             i++;

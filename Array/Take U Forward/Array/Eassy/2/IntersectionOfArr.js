@@ -53,6 +53,6 @@ function unionOfSortedArr(arr1, arr2) {
     return intersection;
 }
 
-let arr1 = [1, 2, 2, 3, 3, 4, 5, 6];
-let arr2 = [2, 3, 3, 5, 6, 6, 7];
-console.log(unionOfSortedArr(arr1, arr2)); // [2,3,3,5,6]
+let arr3 = [1, 2, 2, 3, 3, 4, 5, 6];
+let arr4 = [2, 3, 3, 5, 6, 6, 7];
+console.log(unionOfSortedArr(arr3, arr4)); // [2,3,3,5,6]
