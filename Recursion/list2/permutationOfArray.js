@@ -11,7 +11,7 @@ function permutation(arr, index, ans) {
         permutation(arr, index + 1, ans);
 
         // backtrack
-        // ye swap array ko again ussi form me lane ke liye jo swap se pehle tha
+        // ye swap - array ko again ussi form me lane ke liye jo swap se pehle tha
         [arr[j], arr[index]] = [arr[index], arr[j]]
     }
 }
