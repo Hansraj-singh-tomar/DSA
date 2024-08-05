@@ -47,7 +47,8 @@ console.log(maximumSubArrSum(arr2)); // 7
 
 // -------------------------------------------------------------
 
-// Optimal approach - using kaden's algorithm
+// Optimal approach  
+// using kaden's algorithm
 // TC - O(n)
 
 function maximumSubArrSum(arr) {
@@ -55,18 +56,18 @@ function maximumSubArrSum(arr) {
 
     let sum = 0;
 
-    let start = 0;
-    let end = 0;
+    let startIdx = 0;
+    let endIdx = 0;
     for (let i = 0; i < arr.length; i++) {
         if (sum == 0) {
-            start = i;
+            startIdx = i;
         }
 
         sum += arr[i];
 
         if (sum > maxSum) {
             maxSum = sum;
-            end = i
+            endIdx = i
         }
 
         if (sum < 0) {
@@ -74,7 +75,7 @@ function maximumSubArrSum(arr) {
         }
     }
 
-    return [start, end];
+    return [startIdx, endIdx];
 }
 
 let arr3 = [-2, -3, 4, -1, -2, 1, 5, -3];

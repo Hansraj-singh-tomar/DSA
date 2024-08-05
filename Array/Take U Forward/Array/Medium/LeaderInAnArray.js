@@ -1,6 +1,5 @@
 // Leader in an array - Everything in the right side should be smaller
 
-
 // Brute force approach
 // TC - O(n^2)
 // SC - O(n)

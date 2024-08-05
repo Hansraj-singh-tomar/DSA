@@ -54,7 +54,7 @@ console.log(longestSubArr(arr1, k)); // 3
 
 // ---------------------------------------------------------------
 
-// If array elements are positive and zero not negative
+// If array elements are positive and zero, not negative
 // Optimal approach - using two pointers approach
 // TC - O(n)
 
@@ -85,3 +85,4 @@ function longestSubArr(arr, k) {
 let arr2 = [1, 2, 3, 1, 1, 1, 1, 3, 3];
 let k2 = 6;
 console.log(longestSubArr(arr2, k2)); // 4
+

@@ -1,3 +1,5 @@
+// we have to show the count of unique elements from the array.
+
 // TC - O(n)
 function removeDuplicate(arr) {
     let setArr = new Set(arr);
@@ -9,8 +11,7 @@ function removeDuplicate(arr) {
 let arr = [1, 1, 1, 2, 2, 2, 3, 3];
 console.log(removeDuplicate(arr));
 
-// -------------------------------------------------
-
+// -----------------------------------------------------------
 
 // Optimal approach - Two pointers
 // TC- O(n)
@@ -24,6 +25,7 @@ function removeDuplicate(arr) {
         }
     }
     return i + 1;
+    // return arr.slice(0, i + 1); // [1,2,3]
 }
 
 let arr2 = [1, 1, 1, 2, 2, 3, 3];

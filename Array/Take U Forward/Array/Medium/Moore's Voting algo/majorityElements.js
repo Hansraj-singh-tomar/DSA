@@ -23,8 +23,9 @@ console.log(majorityElement(arr)); // 2
 
 // -----------------------------------------------------------
 
-// Better approach - using hash 
+// Better approach - using hash
 // TC - O(n1 + n2)
+// SC - O(n), bcz we are creating an object
 
 function majorityElement(arr) {
     let hash = {};
@@ -51,7 +52,8 @@ console.log(majorityElement(arr1)); // 2
 
 // -----------------------------------------------------------------
 
-// Optimal approach - using Moore's voting algorithm
+// Using - Moore's Voting Algorithm
+// Optimal approach
 // TC - O(n1 + n2)
 // SC = O(1)
 

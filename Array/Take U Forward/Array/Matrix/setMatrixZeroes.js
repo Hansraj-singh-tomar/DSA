@@ -1,3 +1,5 @@
+// Brute force approach
+
 // we will mark every row and column -1 apart from 0;
 // then next we convert all -1 to 0
 
@@ -46,6 +48,7 @@ for (let i = 0; i < row; i++) {
 
 console.log(arr);
 
+// output -
 // [
 //     [1, 0, 0, 1],
 //     [0, 0, 0, 0],
@@ -53,4 +56,5 @@ console.log(arr);
 //     [1, 0, 0, 1],
 // ]
 
-// whhat the fuck i am doing 
+// ------------------------------------------------------------------------------
+

@@ -46,6 +46,9 @@ console.log(sort012(arr));  // [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2];
 // using dutch national flag algorithm
 // TC - O(n)
 // SC - O(1)
+// [0....low-1] ---> 0 (extream left)
+// [low.....mid-1] ----> 1
+// [high+1, n-1] ------> 2 (extream right)
 
 function sort012(arr2) {
     let low = 0;
