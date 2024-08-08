@@ -30,7 +30,6 @@ console.log(longestSubArr(arr, x)); // 3
 // TC - O(n^2)
 // using prefix sum problem
 
-
 function longestSubArr(arr, k) {
     let length = 0;
 
@@ -86,3 +85,43 @@ let arr2 = [1, 2, 3, 1, 1, 1, 1, 3, 3];
 let k2 = 6;
 console.log(longestSubArr(arr2, k2)); // 4
 
+// ----------------------------------------------------------------------------------------
+
+// Using hash table
+// Note :- if array elements are negetive + positive in that case we will use hash table 
+function getPairsCount(arr, n, k) {
+    let maxLength = 0;
+
+    let map = {};
+
+    let prefixSum = 0;
+
+    map[0] = 1;
+
+    for (let i = 0; i < n; i++) {
+        prefixSum += arr[i];
+
+        if (prefixSum == k) {
+            maxLength = Math.max(maxLength, i + 1);
+        }
+
+        // Check if the prefix sum minus the desired sum exists in the map
+        if (map[prefixSum - k] !== undefined) {
+            maxLength = Math.max(maxLength, i - map[prefixSum - k]);
+        }
+
+        if (map[prefixSum] == undefined) {
+            map[prefixSum] = i;
+        }
+    }
+
+    console.log(map);
+
+    return maxLength
+}
+// let arr = [3, 4, 5, 3, -6, 4, -2, 12];
+// let sum = 8;
+let arr = [2, 0, 0, 3];
+let sum = 3;
+let n = arr.length;
+console.log(getPairsCount(arr, n, sum)); // 3

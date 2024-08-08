@@ -1,3 +1,4 @@
+// Q. Count of subArrays equal to given sum
 // this is similar ko zeroSumArray
 
 // Zero sum subArray - Total number of subarray jinka sum zero hai
@@ -98,7 +99,7 @@ function getPairsCount(arr, n, sum) {
 }
 let arr = [3, 4, 5, 3, -6, 4, -2, 12];
 let sum = 8;
-// ouput - 3 // [5,3], 
+// ouput - 3 // [5,3], [-6, 4, -2, 12], [4,5,3,-6,4,-2]
 
 // let arr = [2, 1, 7, -4, 2, 1, 3, 4, -15, 2, -3, 6];
 // let sum = 6
