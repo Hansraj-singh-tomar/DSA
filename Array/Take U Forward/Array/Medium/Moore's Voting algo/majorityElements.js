@@ -35,16 +35,20 @@ function majorityElement(arr) {
     for (let elm of arr) {
         if (hash[elm]) {
             hash[elm]++;
+            if (hash[elm] > n / 2) {
+                return elm;
+            }
         } else {
             hash[elm] = 1;
         }
     }
 
-    for (let elm in hash) {
-        if (hash[elm] > n / 2) {
-            return elm;
-        }
-    }
+    // we don't need to iterate over again
+    // for (let elm in hash) {
+    //     if (hash[elm] > n / 2) {
+    //         return elm;
+    //     }
+    // }
 }
 
 let arr1 = [2, 2, 3, 3, 1, 2, 2];

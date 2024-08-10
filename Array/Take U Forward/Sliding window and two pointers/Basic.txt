@@ -1,0 +1,18 @@
+// To solve Question using two pointers and sliding window
+// we have two four pattern 
+
+// 1. Constant window
+    // longest subArray with length k = 4
+
+// 2. Longest subArray/subString where <condition>
+    // Exp - longest subArray with sum <= k
+    // Note - isme if condition lga kar window ko shrink karna hai
+
+// 3. Number of subArrays where <condition>
+    // Exp - no. of subArrays where sum = k
+    // 1. no. of subArrays where sum <= k => x
+    // 1. no. of subArrays where sum <= k-1 => y
+    // ans = x-y
+
+// 4. finding sortest/minimum window <condition>
+    // Note - isme while loop lga kar window ko shrink karna hai 

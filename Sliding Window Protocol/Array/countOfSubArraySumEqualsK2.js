@@ -55,10 +55,10 @@ function getPairsCount(arr, n, sum) {
 // console.log(getPairsCount(arr, n, sum)); // 2
 
 
-let arr = [6, -1, -3, 4, -2, 2, 4, 6, -12, -2]
-let n = arr.length;
-let sum = 0;
-console.log(getPairsCount(arr, n, sum)); // 5
+let arr2 = [6, -1, -3, 4, -2, 2, 4, 6, -12, -2]
+let n2 = arr.length;
+let sum2 = 0;
+console.log(getPairsCount(arr2, n2, sum2)); // 5
 
 
 // --------------------------------------------------------------
@@ -97,8 +97,8 @@ function getPairsCount(arr, n, sum) {
     console.log(map);
     return count;
 }
-let arr = [3, 4, 5, 3, -6, 4, -2, 12];
-let sum = 8;
+let arr3 = [3, 4, 5, 3, -6, 4, -2, 12];
+let sum3 = 8;
 // ouput - 3 // [5,3], [-6, 4, -2, 12], [4,5,3,-6,4,-2]
 
 // let arr = [2, 1, 7, -4, 2, 1, 3, 4, -15, 2, -3, 6];
@@ -109,5 +109,5 @@ let sum = 8;
 // let sum = 3
 // // output - 2
 
-let n = arr.length;
-console.log(getPairsCount(arr, n, sum)); 
+let n3 = arr.length;
+console.log(getPairsCount(arr3, n3, sum3)); 

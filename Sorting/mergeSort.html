@@ -41,7 +41,60 @@
         console.log(mergeSort(items));
 
     </script>
+    // ==================== Merge Sort another approach =================================================================== 
+    <script>
+        function merge(arr, low, mid, high) {
+    let temp = [];
+    let left = low;
+    let right = mid + 1;
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            temp.push(arr[left]);
+            left++;
+        } else {
+            temp.push(arr[right]);
+            right++;
+        }
+    }
+
+    // copying left-out elements from left half
+    while (left <= mid) {
+        temp.push(arr[left]);
+        left++;
+    }
+
+    // copying left-out elements from right half
+    while (right <= high) {
+        temp.push(arr[right]);
+        right++;
+    }
+
+    // inserting from temp array to original array.
+    for (let i = low; i <= high; i++) {
+        arr[i] = temp[i - low];
+    }
+}
+
+function mergeSort(arr, low, high) {
+    if (low >= high) {
+        return
+    }
+
+    let mid = Math.floor((low + high) / 2);
+
+    mergeSort(arr, low, mid);
+    mergeSort(arr, mid + 1, high);
+    merge(arr, low, mid, high);
+}
+
+let arr = [9, 4, 7, 6, 3, 1, 5];
+console.log(mergeSort(arr, 0, arr.length - 1));
+console.log(arr); // [1, 3, 4, 5, 6, 7, 9]
+
+    </script>
 </body>
 </html>
 
 // inversion count problem is similar to it.
+
+// 

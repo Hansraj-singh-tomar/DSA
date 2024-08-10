@@ -56,6 +56,7 @@ console.log(longestSubArr(arr1, k)); // 3
 // If array elements are positive and zero, not negative
 // Optimal approach - using two pointers approach
 // TC - O(n)
+// SC - O(1)
 
 function longestSubArr(arr, k) {
     let right = 0;
@@ -89,39 +90,39 @@ console.log(longestSubArr(arr2, k2)); // 4
 
 // Using hash table
 // Note :- if array elements are negetive + positive in that case we will use hash table 
-function getPairsCount(arr, n, k) {
+function longestSubArr(arr, k) {
+    let hash = {};
     let maxLength = 0;
-
-    let map = {};
-
     let prefixSum = 0;
-
-    map[0] = 1;
-
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < arr.length; i++) {
         prefixSum += arr[i];
 
-        if (prefixSum == k) {
+        if (k == prefixSum) {
             maxLength = Math.max(maxLength, i + 1);
         }
 
-        // Check if the prefix sum minus the desired sum exists in the map
-        if (map[prefixSum - k] !== undefined) {
-            maxLength = Math.max(maxLength, i - map[prefixSum - k]);
+        let remove = prefixSum - k;
+
+        if (hash[remove] !== undefined) {
+            maxLength = Math.max(maxLength, i - hash[remove])
         }
 
-        if (map[prefixSum] == undefined) {
-            map[prefixSum] = i;
+        if (hash[prefixSum] == undefined) {
+            hash[prefixSum] = i;
         }
     }
 
-    console.log(map);
+    console.log(hash);
 
-    return maxLength
+    return maxLength;
 }
-// let arr = [3, 4, 5, 3, -6, 4, -2, 12];
-// let sum = 8;
-let arr = [2, 0, 0, 3];
-let sum = 3;
-let n = arr.length;
-console.log(getPairsCount(arr, n, sum)); // 3
+
+let arr3 = [3, 4, 5, 3, -6, 4, -2, 12];
+let k1 = 8; // 6 // [4, 5, 3, -6, 4, -2]
+
+// let arr = [2, 0, 0, 3];
+// let k = 3; // maxLength = 3
+
+// let arr = [1, 2, 3, 1, 1, 1, 1, 4, 2, 3];
+// let k = 3; // maxLength = 3
+console.log(longestSubArr(arr3, k1)); // 3
