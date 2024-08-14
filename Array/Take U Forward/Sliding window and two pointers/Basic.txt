@@ -1,18 +1,49 @@
-// To solve Question using two pointers and sliding window
-// we have two four pattern 
+* To solve Question using two pointers and sliding window
+* we have four pattern 
 
-// 1. Constant window
-    // longest subArray with length k = 4
+1. Constant window
+    -> longest subArray with max sum with length k = 4
+    Exp - [-1,2,3,3,4,5,-1], k = 4, ans = [3,3,4,5]
+    sudo code =>    
+        let l=0; r=k-1;
+        while(right<n-1){
+            sum = sum - arr[l];
+            l++;
+            r++;
+            sum = sum + arr[r];
+        }
+        maxSum = max(maxSum, sum);
 
-// 2. Longest subArray/subString where <condition>
-    // Exp - longest subArray with sum <= k
-    // Note - isme if condition lga kar window ko shrink karna hai
+2. Longest subArray/subString where <condition>
+    Exp - longest subArray with sum <= k
+    arr - [2,5,1,7,10], k = 14, ans = [5,1,7], bcz sum = 13 <= k
+    solution => 
+    1. Brute force - generate all subArr and check with the condition 
+    2. Optimal approach - with expand and shrink
+    sudo code => 
+        let l = 0; r = 0, maxLength = 0, sum = 0;
+        while(r < n){
+           sum += arr[r];
 
-// 3. Number of subArrays where <condition>
-    // Exp - no. of subArrays where sum = k
-    // 1. no. of subArrays where sum <= k => x
-    // 1. no. of subArrays where sum <= k-1 => y
-    // ans = x-y
+           // if(sum > k){} // if we have to find the length of subArr then we will use if condition
+           while(sum > k){ // if we have to find subArr then we will use while loop
+                sum -= arr[l];
+                l++;
+           }
 
-// 4. finding sortest/minimum window <condition>
-    // Note - isme while loop lga kar window ko shrink karna hai 
+           if(sum <= k){
+                maxLength = max(maxLength, r-l+1)
+           } 
+           r++;
+        }
+        return maxLength;
+
+3. Number of subArrays where <condition>, we will solve it using patter - 2 which is above
+    Exp - count/no. of subArrays with sum = k, if condition is constant then very tuff to understand when to shrink and expand
+    // in that situation we will use pattern - 2 and get our answer
+    1. no. of subArrays where sum <= k => x
+    2. no. of subArrays where sum <= k-1 => y
+    ans = x-y
+
+4. finding sortest/minimum window <condition>
+   -> if we get valid window we try to shrink and check bcz we need min/shortest window 

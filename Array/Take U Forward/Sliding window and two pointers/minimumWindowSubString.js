@@ -8,6 +8,9 @@
 // let str1 = "abacdabad";
 // let str2 = "abad";
 
+
+// TC - O(2n) + O(n)
+// SC - O(n)
 function minimumWindowSubString(s, t) {
     let minLength = Infinity;
     let startingIdx = -1;
@@ -47,11 +50,11 @@ function minimumWindowSubString(s, t) {
         console.log("");
         return "";
     } else {
-        console.log(s.substr(startingIdx, minLength)); // "bca"
+        console.log(s.substr(startingIdx, minLength));
         return s.substr(startingIdx, minLength);
     }
 }
 
 let s = "ddaaabbca";
 let t = "abc";
-console.log(minimumWindowSubString(s, t)); // "bca"
+console.log(minimumWindowSubString(s, t));

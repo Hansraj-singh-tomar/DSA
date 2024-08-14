@@ -58,16 +58,21 @@ for (let i = 0; i < nn - 1; i++) {
 // reverse the row
 // TC - O(n + n/2)
 
-for (let i = 0; i < nn; i++) {
-    matrixx[i].sort((a, b) => b - a);
+for (let row of matrixx) {
+    row.reverse();
 }
+
+// In that we are sorting an element but we have reverse the row 
+// for (let i = 0; i < nn; i++) {
+//     matrixx[i].sort((a, b) => b - a);
+// }
 
 console.log(matrixx);
 
 // Output -
 // [
 //  [13, 9, 5, 1],
-//  [14, 10, 6, 2].
-//  [15, 11, 7, 3]
-//  [16, 12, 8, 4]
+//  [14, 10, 6, 2],
+//  [15, 11, 7, 3],
+//  [16, 12, 8, 4],
 // ]

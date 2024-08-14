@@ -14,7 +14,7 @@ function longestSubStr(str) {
 
         maxLength = Math.max(maxLength, right - left + 1);
 
-        // we are storing char with index in hash map
+        // we are storing char with index in that hash map
         hash[str[right]] = right;
         right++;
     }
