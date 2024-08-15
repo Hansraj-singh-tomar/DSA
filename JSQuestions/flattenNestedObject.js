@@ -3,8 +3,8 @@ function flattenObject(obj, parentKey = '', result = {}) {
         if (obj.hasOwnProperty(key)) {
             let newKey = parentKey ? `${parentKey}.${key}` : key;
 
-            if (typeof obj[key] == "object" && obj[key] !== null && !Array.isArray(obj[key])) {
-                flattenObject(obj[key], newKey, result)
+            if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                flattenObject(obj[key], newKey, result);
             } else {
                 result[newKey] = obj[key];
             }

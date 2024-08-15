@@ -50,7 +50,8 @@ function longestSubStr(str) {
         seen[str[right]] = (seen[str[right]] || 0) + 1; // updating the count of character 
 
         // sliding window if character repeats
-        while (seen[str[right]] > 1) {
+        // while (seen[str[right]] > 1) {
+        if (seen[str[right]] > 1) {
             seen[str[left]]--; // Decrcement count of leftmost character 
             left++;
         }
@@ -97,5 +98,5 @@ function longestSubStr(str) {
     return maxLength;
 }
 
-let str = "abcabcbb";
-console.log(longestSubStr(str)); // 3 // "abc"
+let str3 = "abcabcbb";
+console.log(longestSubStr(str3)); // 3 // "abc"

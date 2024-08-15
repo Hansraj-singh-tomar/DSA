@@ -9,6 +9,46 @@
 // let str2 = "abad";
 
 
+
+// Brute force approach
+function minimumWindowSubString(s, t) {
+    let minLength = Infinity;;
+    let startingIdx = 0;
+
+    for (let i = 0; i < s.length; i++) {
+        let hash = {};
+
+        for (let j = 0; j < t.length; j++) {
+            hash[t[j]] = (hash[t[j]] || 0) + 1;
+        }
+
+        let count = 0;
+        for (let j = i; j < s.length; j++) {
+            if (hash[s[j]] > 0) count++;
+
+            hash[s[j]]--;
+
+            if (count == t.length) {
+                if (j - i + 1 < minLength) {
+                    minLength = j - i + 1;
+                    startingIdx = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    return s.substr(startingIdx, minLength);
+}
+
+let s = "ddaaabbca";
+let t = "abc";
+console.log(minimumWindowSubString(s, t)); // "bca"
+
+
+
+// -----------------------------------------------------------------------------------------------
+
 // TC - O(2n) + O(n)
 // SC - O(n)
 function minimumWindowSubString(s, t) {
@@ -55,6 +95,7 @@ function minimumWindowSubString(s, t) {
     }
 }
 
-let s = "ddaaabbca";
-let t = "abc";
-console.log(minimumWindowSubString(s, t));
+let s1 = "ddaaabbca";
+let t1 = "abc";
+console.log(minimumWindowSubString(s1, t1));
+

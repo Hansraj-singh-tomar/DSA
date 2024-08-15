@@ -1,0 +1,16 @@
+=> Binary search time complexity - O(logn), base of log is 2
+
+=> lower bound - smallest index such that arr[index] >= x
+=> Exp - 
+1.
+let arr = [3,5,8,15,19], x = 8
+lowerBound = 2 // arr[2] = 8
+2.
+let arr = [3,5,8,15,19], x = 9
+lowerBound = 3 // arr[3] = 15
+3.
+let arr = [3,5,8,15,19], x = 20
+lowerBound = 5 // arr[5] = which doesn't exist in arr
+4. 
+let arr = [3,5,8,15,19,19,19], x = 19
+lowerBound = 4 // arr[4] = 19

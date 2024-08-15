@@ -1,3 +1,5 @@
+// Normalize data in objects
+
 let list = [
     { name: "A", age: 22 },
     { name: "B", age: 22 },
