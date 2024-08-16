@@ -1,16 +1,76 @@
 => Binary search time complexity - O(logn), base of log is 2
 
 => lower bound - smallest index such that arr[index] >= x
+Note - next first value which is arr[index] >= x
 => Exp - 
 1.
 let arr = [3,5,8,15,19], x = 8
-lowerBound = 2 // arr[2] = 8
+lowerBoundIdx = 2 
 2.
 let arr = [3,5,8,15,19], x = 9
-lowerBound = 3 // arr[3] = 15
+lowerBoundIdx = 3 
 3.
 let arr = [3,5,8,15,19], x = 20
-lowerBound = 5 // arr[5] = which doesn't exist in arr
+lowerBoundIdx = 5 // which doesn't exist in arr
 4. 
 let arr = [3,5,8,15,19,19,19], x = 19
-lowerBound = 4 // arr[4] = 19
+lowerBoundIdx = 4 
+
+=> Sudo code 
+function lowerBound(arr, target, n){
+    let low = 0, high = n-1, ans = n;
+
+    while(low <= high){
+        mid = (low + high) / 2;
+
+        if(arr[mid] >= target){
+            ans = mid;
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    return ans;
+}
+
+// ------------------------------------------------
+
+=> Upper bound - smallest index such that arr[idx] > x
+1.
+let arr = [2,3,6,7,8,8,11,11,11,12], x = 6 
+upperBoundIdx = 3
+
+2.
+let arr = [2,3,6,7,8,8,11,11,11,12], x = 11
+upperBoundIdx = 9
+
+3.
+let arr = [2,3,6,7,8,8,11,11,11,12], x = 12
+upperBoundIdx = 10
+3.
+let arr = [2,3,6,7,8,8,11,11,11,12], x = 13
+upperBoundIdx = 10
+3.
+let arr = [2,3,6,7,8,8,11,11,11,12], x = 0
+upperBoundIdx = 0
+
+=> Sudo code 
+function lowerBound(arr, target, n){
+    let low = 0, high = n-1, ans = n;
+
+    while(low <= high){
+        mid = (low + high) / 2;
+
+        if(arr[mid] > target){
+            ans = mid;
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    return ans;
+}
+
+
