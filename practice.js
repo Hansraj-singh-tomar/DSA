@@ -1,47 +1,61 @@
-function flattenObject(obj, parentKey = '', result = {}) {
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            let newKey = parentKey ? `${parentKey}.${key}` : key;
-
-            if (typeof obj[key] == "object" && obj[key] !== null && !Array.isArray(obj[key])) {
-                flattenObject(obj[key], newKey, result)
-            } else {
-                result[newKey] = obj[key];
-            }
-        }
+class Stack {
+    constructor() {
+        this.queue1 = [];
+        this.queue2 = [];
     }
-    return result;
+
+    // Push an element onto the stack
+    push(value) {
+        this.queue1.push(value);
+    }
+
+    // Pop the top element off the stack and return it
+    pop() {
+        if (this.isEmpty()) {
+            throw new Error("Stack is empty");
+        }
+
+        // Move all elements except the last one from queue1 to queue2
+        while (this.queue1.length > 1) {
+            this.queue2.push(this.queue1.shift());
+        }
+
+        // The last element of queue1 is the top of the stack
+        const topElement = this.queue1.shift();
+
+        // Swap queue1 and queue2
+        [this.queue1, this.queue2] = [this.queue2, this.queue1];
+
+        return topElement;
+    }
+
+    // Peek at the top element of the stack without removing it
+    peek() {
+        if (this.isEmpty()) {
+            throw new Error("Stack is empty");
+        }
+
+        return this.queue1[this.queue1.length - 1];
+    }
+
+    // Check if the stack is empty
+    isEmpty() {
+        return this.queue1.length === 0;
+    }
+
+    display() {
+        return this.queue1;
+    }
 }
 
+// Example usage:
+const stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+console.log(stack.peek());   // Output: 3
+console.log(stack.pop());    // Output: 3
+console.log(stack.peek());   // Output: 2
+console.log(stack.isEmpty()); // Output: false
+console.log(stack.display()); // [1,2]
 
-
-const response = {
-    name: "sam",
-    age: 25,
-    characteristics: {
-        height: "6 feet",
-        complexion: "dark",
-        hair: "black",
-    },
-    techStack: {
-        language: "Javascript",
-        framework: {
-            name: "React",
-            version: "18"
-        }
-    }
-}
-
-console.log(flattenObject(response));
-
-// output -
-// {
-//     name: 'sam',
-//     age: 25,
-//     characteristics.height: '6 feet',
-//     characteristics.complexion: 'dark',
-//     characteristics.hair: 'black',
-//     techStack.language: 'javascript',
-//     techStack.framework.name: 'React',
-//     techStack.framework.version: 'React',
-// }
