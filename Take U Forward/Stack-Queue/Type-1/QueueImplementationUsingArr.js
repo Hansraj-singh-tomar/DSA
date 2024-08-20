@@ -37,7 +37,7 @@ class Queue {
             throw new Error("queue is empty");
         }
 
-        return this.queue[0];
+        return this.queue[0]; // we can't do like that this.queue.shift()
     }
 
     display() {

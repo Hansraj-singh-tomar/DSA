@@ -36,7 +36,7 @@ class Stack {
     }
 
     peak() {
-        return this.stack[this.stack.length - 1];
+        return this.stack[this.stack.length - 1]; // we can't do like that - this.stack.pop()
     }
 
     display() {
