@@ -1,4 +1,6 @@
 // By vedant jain
+// container with most water and trapping rain water both the different problem
+
 function mostWater(height) {
     let l = 0;
     let r = height.length - 1;

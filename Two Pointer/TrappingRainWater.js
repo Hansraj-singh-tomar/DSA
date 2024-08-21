@@ -1,3 +1,5 @@
+// container with most water and trapping rain water both the different problem
+
 // Time complexity => O(n)
 // space complexity => O(n)
 function trappingRainWater(height, n) {
@@ -93,8 +95,8 @@ function trappingRainWater(arr, n) {
     let rightMax = 0;
 
     while (left < right) {
-        if (arr[left] < arr[right]) {
-            if (arr[left] > leftMax) {
+        if (arr[left] <= arr[right]) {
+            if (arr[left] >= leftMax) {
                 leftMax = arr[left];
             } else {
                 water += leftMax - arr[left];
