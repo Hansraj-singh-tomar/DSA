@@ -55,6 +55,7 @@ console.log(stack.display()); // [{value: 5, min: 5}, {value: 10, min: 5}]
 
 
 // using ES-6 classes
+// In that we will store value in the form of {key,value}
 
 class MinStack {
     constructor() {

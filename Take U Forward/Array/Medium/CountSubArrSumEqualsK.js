@@ -70,7 +70,7 @@ function getPairsCount(arr, n, sum) {
     for (let i = 0; i < n; i++) {
         prefixSum += arr[i];
 
-        // Check if the prefix sum minus the desired sum exists in the map
+        // Check if the prefix sum - the desired sum exists in the map
         if (map[prefixSum - k]) {
             count += map[prefixSum - k]; // count of prefixSum
             map[prefixSum]++; // prefixSum ko increase kar do
