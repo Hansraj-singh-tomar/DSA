@@ -58,3 +58,35 @@ console.log(largestRectangleInHistogram(arr)); // 10
 
 // ------------------------------------------------------------------------
 
+
+function largestRectangleInHistogram(arr) {
+    let st = []; // In that we have to store the indexes 
+    let maxArea = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+        while (st.length !== 0 && arr[i] < arr[st[st.length - 1]]) {
+            let elm = st[st.length - 1];
+            st.pop();
+            let nse = i;
+            let pse = st.length == 0 ? -1 : st[st.length - 1];
+            maxArea = Math.max(arr[elm] * (nse - pse - 1), maxArea);
+        }
+        st.push(i);
+    }
+
+    // Process remaining elements in the stack
+    while (st.length !== 0) {
+        let nse = n; // for remaining elm has no next smaller element
+        let elm = st[st.length - 1];
+        let pse = st.length == 0 ? -1 : st[st.length - 1];
+        maxArea = Math.max(arr[elm] * (nse - pse - 1), maxArea);
+    }
+
+    return maxArea;
+}
+
+let arr2 = [3, 2, 10, 11, 5, 10, 6, 3];
+console.log(largestRectangleInHistogram(arr2));
+
+// 2 is the nse of 3
+// -1 is the pse of 3 
