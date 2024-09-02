@@ -1,15 +1,13 @@
-// Sliding Window Maximum
+// celebrity problem
+// Given an N*N Matrix with value 0 and 1
+// everyone knows him, he knows no one
 
-let nums = [1, 3, -1, -3, 5, 3, 2, 1, 6];
-let ans = [];
-let k = 3;
+// Matrix =>
+// [
+//     [0,1,1,0],
+//     [0,0,0,0],
+//     [0,1,0,0],
+//     [1,1,0,0],
+// ]
 
-for (let i = 0; i <= nums.length - k; i++) {
-    let max = nums[i];
-    for (let j = i; j < i + k; j++) {
-        max = Math.max(max, nums[j])
-    }
-    ans.push(max);
-}
-
-console.log(ans); // [3, 3, 5, 5, 5, 3, 6]
+// [0][2] = 1, means that the person-0 knows person-2, vise-versa not true
