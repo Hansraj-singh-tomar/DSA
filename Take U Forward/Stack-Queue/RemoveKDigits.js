@@ -33,7 +33,6 @@ function removeKDigits(str, k) {
 
 let str = "1432219"; // "1219"
 // let str = "00100"; // "0"
-// let str = "123456"; // "123" // while(k > 0) st.pop(), k--;
+// let str = "123456"; // "123"
 let k = 3;
 console.log(removeKDigits(str, k)); // 1219
-

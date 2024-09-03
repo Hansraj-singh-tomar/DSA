@@ -43,11 +43,10 @@ function slidingWindowMaximum(arr, k) {
             ans.push(arr[deque[0]]);
         }
     }
-
     return ans;
 }
 
 // let arr = [1, 3, -1, -3, 5, 3, 7, 1, 6]; // [3, 3, 5, 5, 7, 7, 7] 
 let arr = [1, 3, -1, -3, 5, 3, 2, 1, 6]; // [3,3,5,5,5,3,6]
-let k = 3;
-console.log(slidingWindowMaximum(arr, k)); 
+let k2 = 3;
+console.log(slidingWindowMaximum(arr, k2)); 
