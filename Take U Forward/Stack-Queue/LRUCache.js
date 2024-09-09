@@ -1,3 +1,17 @@
+// LRU cache implementation using js Map data structure
+
+// GET
+// In get we have to return value from map or -1 if not found
+// Make it most recently used, for that we will have to delete it from map and add it at last
+
+// PUT
+// In set firstly we have to check that,
+// if it is already present than we have to delete it from map
+// if capacity is full than we have to delete last element from map and add new one and make it most recently used
+// then we have to add it at last
+
+// Time complexity of get and set is O(1)
+
 class LRUCache {
     constructor(capacity) {
         this.capacity = capacity; // Max number of items the cache can hold
