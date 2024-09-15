@@ -23,9 +23,6 @@ function AddOne(head) {
     head = reverseList(head);
     let curr = head;
     let carry = 1;
-
-    let newHead = curr;
-
     while (curr !== null) {
         curr.data += carry;
         if (curr.data < 10) {
@@ -41,12 +38,11 @@ function AddOne(head) {
     if (carry == 1) {
         let newNode = new NodeList(1);
         newNode.next = head;
-        newHead = newNode;
-        return newHead;
+        head = newNode;
     }
-
-    return reverseList(newHead);
+    return reverseList(head);
 }
+
 
 const head = new NodeList(1, new NodeList(5, new NodeList(9)));
 console.log(AddOne(head)); // { data: 1, next: { data: 6, next: { data: 0, next: null } } }

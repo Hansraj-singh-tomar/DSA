@@ -5,28 +5,34 @@ class NodeList {
     }
 }
 
-function firstCommonNode(head1, head2) {
-    let stack = [];
-    let current = head1;
 
-    while (current !== null) {
-        stack.push(current, 1);
-        current = current.next;
-    }
+function detectLoop(head) {
+    let slow = head;
+    let fast = head;
 
-    temp = head2;
-    while (temp !== null) {
-        if (stack[current] === temp) {
-            return temp;
-        } else {
-            temp = temp.next;
+    while (fast !== null && fast.next !== null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow === fast) {
+            return true; // Loop detected
         }
     }
 
-    return null;
+    return false; // No loop detected
 }
 
-let head1 = new NodeList(3, new NodeList(1, new NodeList(4, new NodeList(6, new NodeList(2)))));
-let head2 = new NodeList(1, new NodeList(2, new NodeList(4, new NodeList(5, new NodeList(4, new NodeList(6, new NodeList(2)))))))
+// Example LinkedList with a loop: 1 -> 2 -> 3 -> 4 -> 5 -> 2 (loop)
+let node5 = new NodeList(5);
+let node4 = new NodeList(4, node5);
+let node3 = new NodeList(3, node4);
+let node2 = new NodeList(2, node3);
+let head = new NodeList(1, node2);
 
-console.log(firstCommonNode(head1, head2));
+// Creating a loop by connecting node5 to node2
+node5.next = node2;
+
+console.log(detectLoop(head)); // true (loop detected)
+
+
+
+

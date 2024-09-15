@@ -32,20 +32,20 @@ function palindromOrNot(head) {
     }
 
     // Part 2 - reversing the second half
-    let newHead = reverseList(slow);
+    let newHead = reverseList(slow.next);
 
     // Part 3 - comparing both halves
-    let firstHalf = head;
-    let secondHalf = newHead;
-    while (secondHalf !== null) {
-        if (firstHalf.data !== secondHalf.data) {
-            reverseList(newHead);
+    let first = head;
+    let second = newHead;
+    while (second !== null) {
+        if (first.data !== second.data) {
+            // reverseList(newHead); // according to requirement we have to reverse it 
             return false;
         }
-        firstHalf = firstHalf.next;
-        secondHalf = secondHalf.next;
+        first = first.next;
+        second = second.next;
     }
-    reverseList(newHead);
+    // reverseList(newHead);
     return true;
 }
 
