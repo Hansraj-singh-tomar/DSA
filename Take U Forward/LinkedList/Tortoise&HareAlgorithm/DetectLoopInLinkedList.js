@@ -1,3 +1,5 @@
+// Approach: 1. Create a map to store visited nodes
+// TC - O(n * 2logn) | SC - O(n)
 class NodeList {
     constructor(data, next = null) {
         this.data = data;
@@ -42,7 +44,8 @@ console.log(detectLoop(head)); // true (loop detected)
 
 // --------------------------------------------------------------------------
 
-
+// Approach: 2. Fast and slow pointers
+// TC - O(n) | SC - O(1)
 class NodeList {
     constructor(data, next = null) {
         this.data = data;
