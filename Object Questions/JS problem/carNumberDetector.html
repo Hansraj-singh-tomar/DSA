@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Number Detector</title>
+</head>
+<body>
+    <h1>Car Number Plate Detector</h1>
+    <input type="file" id="fileInput" accept="image/*" />
+    <canvas id="canvas" ></canvas>
+    <div id="result"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.4/dist/tesseract.min.js"></script>
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const resultDiv = document.getElementById('result');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const img = new Image();
+            img.onload = () => {
+                // Draw the uploaded image onto the canvas
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                // Use Tesseract.js to recognize the text (license plate)
+                Tesseract.recognize(
+                    canvas, // Use the canvas as the source image
+                    'eng',
+                    {
+                        logger: (m) => console.log(m), // Log progress
+                    }
+                ).then(({ data: { text } }) => {
+                    resultDiv.innerText = `Detected License Plate Number: ${text.trim()}`;
+                }).catch((err) => {
+                    resultDiv.innerText = 'Error recognizing text: ' + err;
+                });
+            };
+
+            img.src = URL.createObjectURL(file); // Load the uploaded image
+        });
+    </script>
+</body>
+</html>

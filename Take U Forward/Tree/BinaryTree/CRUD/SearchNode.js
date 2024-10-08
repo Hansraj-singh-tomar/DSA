@@ -45,42 +45,31 @@ class BinaryTree {
         }
     }
 
-    preOrder(root) {
-        if (root === null) {
-            return;
+    search(data) {
+        if (this.root === null) {
+            return false;
         }
-        let queue = [root];
-        let ans = [];
+
+        // use a queue to perform level order traversal
+        const queue = [this.root];
+
         while (queue.length > 0) {
             const current = queue.shift();
-            ans.push(current.data);
 
-            if (current.left) {
+            if (current.data === data) {
+                return true;
+            }
+
+            if (current.left !== null) {
                 queue.push(current.left);
             }
-            if (current.right) {
+
+            if (current.right !== null) {
                 queue.push(current.right);
             }
         }
-        return ans;
-    }
 
-    inOrder(root) {
-        if (root === null) {
-            return;
-        }
-        this.inOrder(root.left);
-        console.log(root.data);
-        this.inOrder(root.right);
-    }
-
-    postOrder(root) {
-        if (root === null) {
-            return;
-        }
-        this.postOrder(root.left);
-        this.postOrder(root.right);
-        console.log(root.data);
+        return false;
     }
 }
 
@@ -95,13 +84,11 @@ tree.addNode(7);
 tree.addNode(8);
 tree.addNode(9);
 
-console.log(tree.preOrder(tree.root)); // Output: 1 2 4 8 9 5 3 6 7
-
-// tree.inOrder(tree.root); // Output: 8 4 9 2 5 1 6 3 7
-
-// tree.postOrder(tree.root); // Output: 8 9 4 5 2 6 7 3 1
+console.log(tree.search(10)); // false
+console.log(tree.search(6)); // true
 
 console.log(tree);
+
 // Output:-
 //          1
 //        /   \
