@@ -138,14 +138,16 @@ class BinaryTree {
         let current = root;
 
         while (current != null || stack.length > 0) {
+            // traverse left subtree
             if (current !== null) {
                 stack.push(current);
                 current = current.left;
             } else {
+                // traverse right subtree
                 let temp = stack[stack.length - 1].right;
+                // visit the node
                 if (temp === null) {
-                    temp = stack[stack.length - 1];
-                    stack.pop();
+                    temp = stack.pop();
                     result.push(temp.data);
                     while (stack.length > 0 && temp === stack[stack.length - 1].right) {
                         temp = stack.pop();
