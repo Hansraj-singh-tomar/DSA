@@ -45,7 +45,7 @@ root.right = new Node(3);
 root.right.left = new Node(4);
 root.right.right = new Node(6);
 root.right.left.left = new Node(5);
-console.log(isTreeBalanced(root)); // false
+console.log(isTreeBalanced(root)); // false, means it's not a balanced tree
 
 // Tree -
 //          1
