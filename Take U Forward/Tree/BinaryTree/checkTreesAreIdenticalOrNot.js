@@ -36,7 +36,14 @@ root2.right.right = new Node(5);
 console.log(checkIdenticalOrNot(root1, root2));  // true
 
 
-// Tree -
+// Tree - 1
+//          1
+//        /   \
+//       2     3
+//            /  \
+//           4    5
+
+// Tree - 2
 //          1
 //        /   \
 //       2     3

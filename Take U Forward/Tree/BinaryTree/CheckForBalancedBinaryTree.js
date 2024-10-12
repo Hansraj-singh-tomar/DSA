@@ -8,6 +8,39 @@ class Node {
     }
 }
 
+// ------------------------------------------------------------------------
+
+// Brute Approach from Take u forward
+// TC - O(n^2)
+// SC - O(n)
+
+function findHeight(node) {
+    if (node == null) return 0;
+
+    return 1 + Math.max(findHeight(node.left), findHeight(node.right));
+}
+
+function check(root) {
+    if (node == null) return 0;
+
+    let lh = findHeight(node.left);
+    let rh = findHeight(node.right);
+
+    if (Math.abs(lh - rh) > 1) return false;
+
+    let left = check(node.left);
+    let right = check(node.right);
+
+    if (!left || !right) return fasle;
+
+    return true;
+}
+
+// ------------------------------------------------------------------------
+
+// Optimized code from Take u forward
+// TC - O(n)
+// SC - O(n)
 function dfsHeight(root) {
     if (root === null) {
         return 0;
@@ -38,6 +71,36 @@ function isTreeBalanced(root) {
     }
     return true;
 }
+
+// ------------------------------------------------------------------------
+
+//Another way from coder Army
+// TC - O(n)
+// SC - O(h)
+
+function height(root) {
+    if (root == null) {
+        return 0;
+    }
+
+    let l = height(root.left);
+    let r = height(root.right);
+
+    if (Math.abs(l - r) > 1) {
+        valid = 0;
+    }
+
+    return 1 + Math.max(l, r);
+}
+function isBalanced(root) {
+    let valid = 1;
+
+    height(root, valid);
+
+    return valid == 1;
+}
+
+// -----------------------------------------------------------------------------
 
 let root = new Node(1);
 root.left = new Node(2);
