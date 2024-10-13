@@ -6,39 +6,56 @@ class Node {
     }
 }
 
-function checkIdenticalOrNot(root1, root2) {
-    if (root1 == null && root2 == null) {   // Both trees are empty
-        return true;
+function verticalOrderTraversal(root) {
+    if (root == null) return [];
+
+    let map = {};  // Map to store nodes at each horizontal distance
+    let queue = [{ node: root, hd: 0 }];  // Queue to store nodes and their horizontal distances
+    let minHd = 0, maxHd = 0;  // Track min and max horizontal distance
+
+    // Perform level order traversal (BFS) while keeping track of horizontal distances
+    while (queue.length > 0) {
+        let { node, hd } = queue.shift();
+
+        // Add node to the corresponding horizontal distance in the map
+        if (!map[hd]) {
+            map[hd] = [];
+        }
+        map[hd].push(node.data);
+
+        // Track min and max horizontal distance
+        minHd = Math.min(minHd, hd);
+        maxHd = Math.max(maxHd, hd);
+
+        // Add left and right children to the queue with updated horizontal distances
+        if (node.left != null) {
+            queue.push({ node: node.left, hd: hd - 1 });
+        }
+        if (node.right != null) {
+            queue.push({ node: node.right, hd: hd + 1 });
+        }
     }
-    if (root1 == null || root2 == null) {   // One tree is empty
-        return false;
+
+    // Iterate from minHd to maxHd to collect nodes in vertical order
+    let result = [];
+    for (let hd = minHd; hd <= maxHd; hd++) {
+        if (map[hd]) {
+            console.log(map[hd]);
+
+            result.push(map[hd]);
+        }
     }
-    return (root1.data == root2.data && checkIdenticalOrNot(root1.left, root2.left) && checkIdenticalOrNot(root1.right, root2.right));
+
+    return result;
 }
 
 // Example tree construction
-let root1 = new Node(1);
+let root = new Node(1);
+root.left = new Node(2);
+root.right = new Node(3);
+root.left.left = new Node(4);
+root.left.right = new Node(5);
+root.right.left = new Node(6);
+root.right.right = new Node(7);
 
-root1.left = new Node(2);
-root1.right = new Node(3);
-
-root1.right.left = new Node(4);
-root1.right.right = new Node(5);
-
-let root2 = new Node(1);
-
-root2.left = new Node(2);
-root2.right = new Node(3);
-
-root2.right.left = new Node(4);
-root2.right.right = new Node(5);
-
-console.log(checkIdenticalOrNot(root1, root2));  // true
-
-
-// Tree -
-//          1
-//        /   \
-//       2     3
-//            /  \
-//           4    5
+console.log(verticalOrderTraversal(root));
