@@ -46,9 +46,9 @@ function BottomViewOfBT(root) {
 function BottomViewOfBT(root) {
     if (!root) return [];
 
-    let map = {};
-    let queue = [{ node: root, level: 0 }];
-
+    let map = {};  // Map to store the first node at each horizontal distance
+    let queue = [{ node: root, Hd: 0 }];  // Queue for BFS traversal with horizontal distance
+    let minHd = 0, maxHd = 0;  // Track minimum and maximum horizontal distance
 
     // Perform level order traversal (BFS)
     while (queue.length > 0) {
@@ -97,7 +97,7 @@ root.right.right = new Node(7);
 root.right.left.left = new Node(8);
 root.right.left.right = new Node(9);
 
-console.log(leftViewOfBT(root));
+console.log(BottomViewOfBT(root));
 
 
 // Output: [4, 8, 6, 9, 7]
