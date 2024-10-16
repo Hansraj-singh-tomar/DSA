@@ -61,7 +61,6 @@ root.right.left = new Node(30);
 root.right.right = new Node(40);
 
 
-
 console.log(childrenSumParent(root));
 
 // Output:
