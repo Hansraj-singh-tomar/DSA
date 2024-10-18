@@ -1,5 +1,6 @@
-// Full explanation available in text book
-// Count total Nodes in a COMPLETE Binary Tree | O(Log^2 N) Approach
+// Full explanation available in text books
+// Construct Binary Tree from InOrder and PostOrder Traversal
+// TC - O(n), SC - O(n) 
 class Node {
     constructor(data, left = null, right = null) {
         this.data = data;

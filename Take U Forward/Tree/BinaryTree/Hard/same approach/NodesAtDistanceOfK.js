@@ -57,7 +57,6 @@ function findNodesAtDistanceK(root, target, k) {
 
     // console.log(graph); // {1 => [2, 3], 2 => [1, 4, 5], 3 => [1, 6, 7], 4 => [2], 5 => [2], 6 => [3], 7 => [3]}
 
-
     // BFS to find nodes at distance k
     const result = [];
     const queue = [{ node: target, distance: 0 }];
