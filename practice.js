@@ -1,5 +1,3 @@
-// Full explanation available in text book
-// Count total Nodes in a COMPLETE Binary Tree | O(Log^2 N) Approach
 class Node {
     constructor(data, left = null, right = null) {
         this.data = data;
@@ -8,52 +6,44 @@ class Node {
     }
 }
 
-function InorderWithMorrisTraversal(root) {
-    let current = root;
+const UsingMorishTraversal = (root) => {
+    let curr = root;
     let prev = null;
-    let inOrder = []
-    while (current != null) {
-        if (current.left == null) {
-            // console.log(current.data);
-            inOrder.push(current.data);
-            current = current.right;
+    let inOrder = [];
+
+    while (curr !== null) {
+        if (curr.left == null) {
+            inOrder.push(curr.data);
+            curr = curr.right;
         } else {
-            prev = current.left;
-            while (prev.right != null && prev.right != current) {
+            prev = curr.left;
+            while (prev.right !== null) {
                 prev = prev.right;
             }
             if (prev.right == null) {
-                prev.right = current;
-                current = current.left;
+                prev.right = curr;
+                curr = curr.left;
             } else {
                 prev.right = null;
-                // console.log(current.data);
-                inOrder.push(current.data);
-                current = current.right;
+                inOrder.push(curr.data);
+
             }
         }
     }
-    return inOrder;
 }
 
+
+// Example tree construction
 let root = new Node(1);
 
 root.left = new Node(2);
-root.right = new Node(3);
+root.right = new Node(5);
 
-root.left.left = new Node(4);
-root.left.right = new Node(5);
+root.left.left = new Node(3);
+root.left.right = new Node(4);
 
-root.left.right.right = new Node(6);
+root.right.right = new Node(6);
+root.right.right.left = new Node(7);
 
-console.log(InorderWithMorrisTraversal(root)); // [4, 2, 5, 6, 1, 3]
-
-
-// Tree -
-//           1
-//         /  \
-//       2     3
-//      / \
-//     4   5
-//          \
-//           6
+UsingMorishTraversal(root)
+console.log(root); 

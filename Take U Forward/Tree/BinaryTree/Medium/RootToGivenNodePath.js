@@ -47,7 +47,7 @@ root.left.right.right = new Node(7);
 
 console.log(RootToGivenNodePath(root, 7));
 
-// Output: [1,2,5,7]
+// Output: [7,5,2,1] and we have to reverse this path which will be the output 
 
 // Tree -
 //           1
@@ -71,7 +71,7 @@ class Node {
 }
 
 
-// Arroach 1
+// Arroach 2(optimal approach)
 
 function getPath(root, target, arr) {
     if (root === null) {
