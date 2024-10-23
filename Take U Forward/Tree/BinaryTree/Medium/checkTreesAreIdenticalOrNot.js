@@ -6,6 +6,24 @@ class Node {
     }
 }
 
+// Approach - 1
+function checkIdenticalOrNot(root1, root2) {
+    if (root1 == null && root2 == null) {
+        return true;
+    }
+
+    if (root1 == null || root2 == null) {
+        return false;
+    }
+
+    if (root1.data != root2.data) {
+        return false;
+    }
+
+    return SameTree(root1.left, root2.left) && SameTree(root1.right, root2.right);
+}
+
+// Approach - 2
 function checkIdenticalOrNot(root1, root2) {
     if (root1 == null && root2 == null) {   // Both trees are empty
         return true;
