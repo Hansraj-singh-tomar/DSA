@@ -6,35 +6,24 @@ class Node {
     }
 }
 
-function InsertIntoBST(root, val) {
-    if (root == null) return new Node(val);
+function findFloor(root, key) {
+    let floor = -1;
 
-    let curr = root;
+    while (root !== null) {
+        if (root.data == key) {
+            floor = root.data;
+            return floor;
+        }
 
-    while (true) {
-        if (val < curr.data) {
-            // Move to the left
-            if (curr.left !== null) {
-                curr = curr.left;
-            } else {
-                curr.left = new Node(val);
-                break;
-            }
+        if (key > root.data) {
+            floor = root.data;
+            root = root.right;
         } else {
-            // Move to the right
-            if (curr.right !== null) {
-                curr = curr.right;
-            } else {
-                curr.right = new Node(val);
-                break;
-            }
+            root = root.left;
         }
     }
-
-    return root;
+    return floor;
 }
-
-
 
 // Example tree construction
 let root = new Node(10);
@@ -53,7 +42,7 @@ root.left.left.right = new Node(4);
 
 root.left.right.right = new Node(9);
 
-console.log(InsertIntoBST(root, 7));
+console.log(findFloor(root, 7)); // 6
 
 // Tree -
 //             10
@@ -63,8 +52,6 @@ console.log(InsertIntoBST(root, 7));
 //        3   6  11 14
 //      / \    \
 //     2   4    9
-//             /
-//            7
 
 
 
