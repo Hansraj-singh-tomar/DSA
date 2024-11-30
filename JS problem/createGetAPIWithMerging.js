@@ -1,5 +1,5 @@
 // Problem statement
-// sppose we have a utility functions getAPI() which fetches data.
+// suppose we have a utility functions getAPI() which fetches data.
 
 const getAPI = async (path, config) {... }
 
@@ -27,7 +27,7 @@ getAPIWithMerging('/list', { keyword: 'learnWithChirag' }).then(...)
 
 // -----------------------------------------------------------------------------------------
 
-// solution - 1 (which is wronge solution)
+// solution - 1 (which is wrong solution)
 // const getAPI = async (path, config) => {
 //     return await fetch(path, config).then(res => res.json());
 // }

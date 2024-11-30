@@ -45,5 +45,5 @@
     2. no. of subArrays where sum <= k-1 => y
     ans = x-y
 
-4. finding sortest/minimum window <condition>
+4. finding shortest/minimum window <condition>
    -> if we get valid window we try to shrink and check bcz we need min/shortest window 

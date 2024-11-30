@@ -1,6 +1,11 @@
 let arr1 = [1, '2', 'three', 4, '5x'];
 let sum1 = 0;
 
+console.log(isNaN('23')); // false
+console.log(isNaN('three')); // true
+
+
+
 arr1.forEach((elm) => {
     if (typeof elm === 'number' || !isNaN(elm)) {
         sum += elm;
