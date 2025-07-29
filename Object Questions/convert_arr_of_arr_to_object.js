@@ -1,5 +1,6 @@
 // Convert Array to Object
 
+// using reduce method 
 let pairs = [['name', 'Alice'], ['age', 25], ['city', 'wonderland']];
 
 let obj = pairs.reduce((acc, [key, value]) => {
@@ -12,8 +13,7 @@ console.log(obj); // {name: 'Alice', age: 25, city: 'wonderland'}
 
 // ----------------------------------------------------------------------------------
 
-// using reduce method 
-
+// using for_of loop 
 let pairs2 = [['name', 'Alice'], ['age', 25], ['city', 'wonderland']];
 
 let hash = {};
