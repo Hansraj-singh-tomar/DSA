@@ -1,0 +1,129 @@
+import JSEncrypt from "jsencrypt"
+
+import crypto from "crypto"
+
+import { Buffer } from "buffer"
+import CryptoJS from "crypto-js"
+
+const jsEncrypt = new JSEncrypt()
+
+export function encryptSymmetricKey(key: any) {
+  try {
+    jsEncrypt.setPublicKey(import.meta.env.VITE_PUBLIC_KEY)
+    console.log("public key", import.meta.env.VITE_PUBLIC_KEY)
+    return jsEncrypt.encrypt(key)
+  } catch (error) {
+    console.log("Encrypting Key Error>>", error)
+  }
+  return null
+}
+
+function formatBodyForEncryption(body: any) {
+  if (typeof body === "object") {
+    return JSON.stringify(body)
+  }
+  return body.toString()
+}
+
+export function encryptRequestData(data: any, passKey: any) {
+  try {
+    if (!data) throw new Error("Encryption: Data Not Present")
+    // const passKey = crypto.randomBytes(16).toString("base64")
+    const encryptedData = CryptoJS.AES.encrypt(
+      formatBodyForEncryption(data),
+      CryptoJS.enc.Utf8.parse(passKey),
+      {
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.ECB,
+      },
+    ).toString()
+    // const encryptedKey = encryptSymmetricKey(passKey)
+    // const returnObj = {
+    //   request: encryptedData,
+    //   k: encryptedKey,
+    // }
+    return encryptedData
+  } catch (error) {
+    console.log("Encrypting Data Error>>", error)
+  }
+  return null
+}
+
+// function formatBodyDecrypted(data: any) {
+//   try {
+//     const val = JSON.parse(data)
+//     if (val && typeof val === "object") {
+//       return val
+//     }
+//   } catch (e) {
+//     console.log(e)
+//   }
+
+//   return data
+// }
+
+export function decryptSymmetricKey(encryptedMessage: any) {
+  try {
+    const rsaPrivateKey = {
+      key: import.meta.env.VITE_PRIVATE_KEY,
+      passphrase: "",
+      padding: crypto.constants.RSA_PKCS1_PADDING,
+    }
+
+    // console.log("decryptedMessage==>", encryptedMessage, rsaPrivateKey)
+    const decryptedMessage = crypto.privateDecrypt(
+      rsaPrivateKey,
+      Buffer.from(encryptedMessage, "base64"),
+    )
+    const abs = decryptedMessage.toString("utf-8")
+    return abs
+  } catch (error) {
+    console.log("Decrypting Key Error>>", error)
+  }
+  return ""
+}
+
+export function decryptRequestData(data: any, decryptedKey: any) {
+  try {
+    //  const { request, k } = obj
+    if (!data || !decryptedKey) throw new Error("Decryption: Data Not Present")
+    // const decryptedKey = decryptSymmetricKey(k)
+    const decryptedData = CryptoJS.AES.decrypt(
+      data,
+      CryptoJS.enc.Utf8.parse(decryptedKey),
+      {
+        mode: CryptoJS.mode.ECB,
+      },
+    )
+    const finalDecrytedVal = decryptedData.toString(CryptoJS.enc.Utf8)
+    return finalDecrytedVal !== "" ? finalDecrytedVal : data
+  } catch (error) {
+    console.log("Decrypting Data Error>>", error)
+    // console.log("data==========>", data)
+    return data
+  }
+}
+
+export function getEncryptedKey(isOnlyEncrytpedKey: boolean = true) {
+  const passKey = crypto.randomBytes(16).toString("base64")
+
+  const encryptedKey = encryptSymmetricKey(passKey)
+
+  if (!isOnlyEncrytpedKey) return { passKey, encryptedKey }
+
+  return encryptedKey
+}
+
+export function getEncryptedVal(data: any) {
+  const encryptedKey = getEncryptedKey()
+  const encryptedData = encryptRequestData(data, encryptedKey)
+  return encryptedData
+}
+
+export function getDecryptedDataWithNoAPIKey(data: any) {
+  const code = data.replaceAll("[", "/") || ""
+  const decryptedText = decryptSymmetricKey(code)
+  const splitted = decryptedText.split("|")
+  const actualCode = decryptRequestData(splitted[0], splitted[1])
+  return actualCode
+}

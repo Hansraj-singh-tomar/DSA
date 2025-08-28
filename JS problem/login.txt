@@ -1,0 +1,357 @@
+import { CircularProgress, FormHelperText } from "@mui/material"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import { FormProvider, useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { changeUserType, login, setTokens } from "store/slices/user/authSlice"
+// import encodeIso9564 from "app/utils/encoding.js"
+import { loginApi } from "app/api/authentication/auth"
+import {
+  getUserProfile,
+  getUserProfileRoleMatrix,
+} from "app/api/commonApi/CommonApi"
+import AlertModal from "app/templates/alertModal/AlertModalNew"
+// import { createFormUrlEncodedRequestBody } from "app/utils/commonFunctions"
+import { useState } from "react"
+import useSecurity from "security/useSecurity"
+// import { sha256 } from "js-sha256"
+// import JSEncrypt from "jsencrypt"
+import FieldsRender from "app/components/zamtel-ui/fieldsRender/FieldsRender"
+
+import { Visibility, VisibilityOff } from "@mui/icons-material"
+import { addSecondsToTime } from "app/utils/dateUtils"
+import {
+  // encryptRequestData,
+  encryptSymmetricKey,
+  getEncryptedVal,
+} from "app/utils/encryption1"
+import crypto from "crypto"
+import { img } from "../../../assets"
+import LoginsFields from "./LoginFields"
+import { resolvePortalForDomain } from "./domains"
+
+export default function Login() {
+  const methods = useForm()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [loginError, setLoginError] = useState<undefined | string>()
+  const [loading, setLoading] = useState(false)
+
+  const [alertModalData, setAlertModalData] = useState<any>(null)
+
+  const { safelyEncyptValue } = useSecurity()
+  const [passwordType, setPasswordType] = useState("password")
+
+  const handleClickShowPassword = () => {
+    setPasswordType((password) =>
+      password === "password" ? "text" : "password",
+    )
+  }
+
+  const loginHandler = async (e: any) => {
+    e.preventDefault()
+    const { username, password } = methods.getValues()
+    console.log("username, password=>", username, password)
+    // const encodedCurrentPassword = encodeIso9564(password, username)
+    // const hashedCurrentPassword = sha256(encodedCurrentPassword)
+    // const rsa = new JSEncrypt()
+    // rsa.setPublicKey(import.meta.env.VITE_PUBLIC_RSA_KEY_WEB as string)
+    // const encryptedCurrentPassword = rsa.encrypt(hashedCurrentPassword)
+    try {
+      setLoading(true)
+      setLoginError("")
+
+      const passKey = crypto.randomBytes(16).toString("base64")
+      const encryptedKey = encryptSymmetricKey(passKey)
+      console.log("randomKey", passKey)
+      console.log("encrypted", encryptedKey)
+      const response = await loginApi(
+        {
+          // loginId: encryptRequestData(username, passKey),
+          // password: encryptRequestData(password, passKey),
+
+          loginId: username,
+          password,
+
+          // grant_type: "password",
+          // client_id: "client",
+          // portalIdentifier: resolvePortalForDomain(),
+        },
+        encryptedKey,
+      )
+
+      if (
+        response?.status?.toLowerCase() === "success" &&
+        response.responseCode === 20000
+      ) {
+        window.localStorage.setItem("token", response?.data?.accessToken)
+        dispatch(
+          setTokens({
+            accessToken: response?.data?.accessToken,
+            refreshToken: response?.data?.accessToken,
+            expiresOn: addSecondsToTime(Number(response?.data?.expiresIn) + 1),
+            lastActionTime: new Date().getTime(),
+          }),
+        )
+        if (import.meta.env.VITE_RBAC !== "true") {
+          const res = await getUserProfile(username)
+          if (res.status === "SUCCESS" && res.responseCode === 200) {
+            const { displayName, email } = res.data
+            dispatch(
+              login({
+                userCode: response.data.usercode,
+                userCodeDecrypted: username,
+                userName: displayName,
+                email,
+              }),
+            )
+            navigate("/app/mp/mm/mr/singleRegistration", { replace: true })
+          } else {
+            setLoginError(res.message)
+          }
+        } else {
+          const res = await getUserProfileRoleMatrix({
+            userCode: username,
+            portalIdentifier: resolvePortalForDomain(),
+          })
+          if (res.status === "success" && res.responseCode === 200) {
+            dispatch(
+              login({
+                userCode: res?.data?.userCode || "",
+                userCodeDecrypted: res?.data?.userCode,
+                userName: res?.data?.userName,
+                displayName: res?.data?.userName,
+                email: res?.data?.emailId,
+                access: safelyEncyptValue(
+                  JSON.stringify(res?.data?.portals || []),
+                ),
+              }),
+            )
+            localStorage.setItem("login", safelyEncyptValue("true"))
+            dispatch(
+              changeUserType({
+                name: res?.data?.designation?.designationName || "",
+              }),
+            )
+            navigate("/app", { replace: true })
+          }
+        }
+        methods.reset()
+      } else if (response.responseCode === 2514) {
+        setAlertModalData({
+          alertType: "warning",
+          message:
+            "Expired Password Reset Mode is enabled on your profile please reset your password !",
+          header: "Attention !",
+          buttonText1: "Reset Password",
+          buttonText2: "Cancel",
+          toggleAction: () => {
+            setAlertModalData(null)
+          },
+          submitHandler: () => {
+            setAlertModalData(null)
+            navigate(
+              `/auth/expired-password-reset/${getEncryptedVal(
+                username,
+              )?.replaceAll("/", "[")}`,
+              { state: { password, username } },
+            )
+          },
+        })
+      } else if (response.responseCode === 2515) {
+        setAlertModalData({
+          alertType: "warning",
+          message:
+            "Forced Password Reset Mode is enabled on your profile please check reset password link in your mailbox to reset your password !",
+          header: "Attention !",
+          buttonText1: "Check Mail",
+          buttonText2: "Cancel",
+          toggleAction: () => {
+            setAlertModalData(null)
+          },
+          submitHandler: () => {
+            setAlertModalData(null)
+            window.location.href =
+              "https://mail.google.com/mail/u/0/#search/Reset+Password"
+            return null
+          },
+        })
+      } else {
+        setLoginError(response.message)
+      }
+      setLoading(false)
+    } catch (err: any) {
+      setLoading(false)
+      setLoginError(err?.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "auto",
+        //   position: "relative",
+        "& .cover-image-login": {
+          position: "absolute",
+          zIndex: 0,
+          top: "5px",
+          left: "5px",
+          right: "5px",
+        },
+        "& .cover-image-login img": {
+          objectFit: "contain",
+        },
+      }}
+    >
+      {/* <Box className="cover-image-login"> */}
+      <img alt="coverImage" src={img} />
+      {/* </Box> */}
+
+      {/* <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          flexGrow: 1,
+        }}
+      > */}
+      {/* <Box
+          sx={{
+            mb: 8,
+            mt: "12%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "relative",
+            backgroundColor: "white",
+            width: "335px",
+            height: "460px",
+            borderRadius: "15px",
+            padding: "37.1px 40.55px",
+            boxShadow: "0px 7px 23px 0px rgba(0, 0, 0, 0.05)",
+          }}
+        > */}
+      {/* <Typography
+            sx={{
+              color: "#2D3748",
+              fontSize: "18px",
+              fontWeight: 500,
+              lineHeight: "140%",
+            }}
+            component="h1"
+            variant="h5"
+          >
+            Login to Continue
+          </Typography> */}
+      {/* <img alt="paylessImage" src={payless} /> */}
+
+      {/* <Box component="form" noValidate> */}
+      <Grid item mt="20px" xs={4} className="login_maxWidth">
+        <FormProvider {...methods}>
+          <form>
+            <FieldsRender
+              column="row"
+              fieldDetails={LoginsFields(
+                passwordType,
+                handleClickShowPassword,
+
+                passwordType === "password" ? (
+                  <VisibilityOff />
+                ) : (
+                  <Visibility />
+                ),
+              )}
+            />
+          </form>
+        </FormProvider>
+      </Grid>
+      <FormHelperText>
+        <Typography variant="subTitle" color="error">
+          {loginError}
+        </Typography>
+      </FormHelperText>
+      <Button
+        type="submit"
+        // fullWidth
+        disabled={loading}
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={(e) => {
+          // navigate("/app")
+          loginHandler(e)
+        }}
+        className="login_button"
+      >
+        Login
+        {loading && (
+          <>
+            &nbsp;&nbsp;
+            <CircularProgress size={20} />
+          </>
+        )}
+      </Button>
+
+      <Grid container justifyContent="center" columnGap={2}>
+        {/* <Grid item>
+          <Typography
+            sx={{
+              color: "#4F19F0",
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "12px",
+              fontWeight: 400,
+              lineHeight: "140%",
+              marginTop: "12px",
+              textDecoration: "underline",
+            }}
+          >
+            New Registration
+          </Typography>
+        </Grid> */}
+        <Grid item>
+          <Typography
+            sx={{
+              color: "#4F19F0",
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "12px",
+              fontWeight: 400,
+              lineHeight: "140%",
+              marginTop: "12px",
+              textDecoration: "underline",
+            }}
+          >
+            Forgot password?
+          </Typography>
+        </Grid>
+      </Grid>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "end",
+          color: "#697E98",
+          fontSize: "11px",
+          fontWeight: 400,
+          lineHeight: "150%",
+          margin: "15px",
+        }}
+      >
+        @ 2025 Zamtel, All Rights Reserved.
+      </Box>
+      {alertModalData && <AlertModal modalInfo={alertModalData} />}
+    </Box>
+  )
+}

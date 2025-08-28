@@ -1,0 +1,4 @@
+let max = Math.max(1,2,3)
+
+for the boolean 
+let num =  T || F;

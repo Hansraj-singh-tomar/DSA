@@ -1,0 +1,42 @@
+✅ Universal API Response Time Guide
+
+| Context / Use Case                              | ✅ Ideal Time        | 🚫 Max Acceptable Time | 🔍 Notes                                                 |
+| ----------------------------------------------- | ------------------- | ---------------------- | -------------------------------------------------------- |
+| **Web & Mobile UI (user-visible)**              | **< 100–300 ms**    | < 1 second             | Feels instant; used for page loads, click responses      |
+| **Mobile Apps (slow networks)**                 | **< 500 ms**        | < 1.5 seconds          | Consider network constraints and optimize payload        |
+| **Microservices / Internal APIs**               | **< 100 ms**        | < 500 ms               | Important to keep chained calls fast                     |
+| **Search APIs / Filtered Queries**              | **< 300–500 ms**    | < 1 second             | Optimize database and use indexes                        |
+| **File Upload / Image Processing (initiation)** | **< 1 second**      | < 2 seconds            | Offload heavy work to background                         |
+| **Background processing APIs (async)**          | **< 2 seconds**     | Up to a few minutes    | Use job queues (e.g., Bull, SQS) and send status updates |
+| **Authentication / Login APIs**                 | **< 200 ms**        | < 500 ms               | Delay feels intrusive here                               |
+| **Notifications / Tracking / Logging**          | **< 100 ms**        | < 300 ms               | Should not block other calls                             |
+| **Batch jobs / Reports generation**             | **Async preferred** | N/A                    | Show status/progress bar or notify on completion         |
+
+---------------------
+
+🛠️ Best Practices (All Contexts)
+✅ Use caching (Redis, browser, CDN)
+
+✅ Compress payloads (gzip, brotli)
+
+✅ Avoid N+1 queries, use joins, projections
+
+✅ Return only required data
+
+✅ Use pagination / lazy loading for lists
+
+✅ Use timeouts and fallbacks in chained microservice calls
+
+---------------------
+
+⚡Ideal API Response Times (Web/API Best Practices)
+
+| Use Case                         | Ideal Time          | Notes                                                         |
+| -------------------------------- | ------------------- | ------------------------------------------------------------- |
+| **User-facing (UI interaction)** | **< 100–300 ms**    | Fast enough to feel “instant” to users                        |
+| **Standard REST API call**       | **< 500 ms**        | Acceptable for most business logic or data fetches            |
+| **Acceptable max latency**       | **< 1 second**      | Should rarely exceed this, or users start to feel a delay     |
+| **Background job trigger**       | < 2–5 seconds       | Can be longer, but keep logs/feedback for debugging           |
+| **Batch processing / reports**   | Minutes (if needed) | Long-running jobs should be async or have progress indicators |
+
+
