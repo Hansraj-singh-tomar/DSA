@@ -1,0 +1,89 @@
+.table_row {
+  margin: 0px !important;
+}
+
+// Grouped header styles
+.grouped-header-cell {
+  font-weight: bold !important;
+  background-color: #f4f4f5 !important;
+  border-bottom: 2px solid #e0e0e0 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+
+  &.main-group {
+    background-color: #eeeeee !important;
+    font-size: 14px !important;
+  }
+
+  &.sub-header {
+    background-color: #f9f9f9 !important;
+    font-size: 12px !important;
+  }
+}
+
+.grouped-table-container {
+  border-left: none !important;
+  border-right: none !important;
+
+  .MuiTable-root {
+    .MuiTableCell-root {
+      border-right: 1px solid #e0e0e0 !important;
+      border-left: none !important;
+
+      &:first-child {
+        border-left: none !important;
+      }
+    }
+
+    // Specific class to remove border from absolute last column
+    .last-column-header {
+      border-right: none !important;
+    }
+
+    // Only remove border from data rows' last column
+    .MuiTableBody-root .MuiTableRow-root .MuiTableCell-root:last-child {
+      border-right: none !important;
+    }
+  }
+
+  .MuiTableHead-root {
+    .MuiTableRow-root:first-child {
+      .MuiTableCell-root {
+        border-bottom: 1px solid #d0d0d0 !important;
+        background-color: #f4f4f5 !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+      }
+
+      // Override the default left alignment for tableHeadCell in grouped tables
+      .tableHeadCell {
+        text-align: center !important;
+      }
+    }
+
+    .MuiTableRow-root:last-child {
+      .MuiTableCell-root {
+        border-bottom: 1px solid #e0e0e0 !important;
+        background-color: #f4f4f5 !important;
+        font-weight: 500 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+      }
+
+      // Override the default left alignment for tableHeadCell in grouped tables
+      .tableHeadCell {
+        text-align: center !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+      }
+    }
+  }
+
+  .MuiTableBody-root {
+    .MuiTableRow-root {
+      .MuiTableCell-root {
+        padding: 8px 16px !important;
+      }
+    }
+  }
+}

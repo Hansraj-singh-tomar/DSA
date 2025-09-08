@@ -1,0 +1,154 @@
+export type TSubControl = {
+  id: number
+  className?: string
+  tcsaLevel: string
+  control?: string
+  subControl: string
+  subsidiary?: string
+  tcsaType: string
+  accountName?: string
+  accountType?: string
+  description?: string
+  walletName: string
+  walletType: string
+  walletCode: string
+  createdBy?: string
+  approvedBy?: string
+  approvedOn?: Date
+  createdTimestamp?: Date
+  updatedBy?: string
+  updatedTimestamp?: Date
+  parkedByLevel?: string
+  parkedByUserCode?: string
+  nextApproverLevel?: string
+  nextApproverUserType?: string
+  status?: string
+  rejectedBy?: string
+  remarks?: string
+  isEnabled?: boolean
+  lastApprovedUserCode?: string
+  lastApprovedUserType?: string
+  lastApproverLevel?: string
+  approvalCode?: string
+}
+
+export type TTCSABank = {
+  id: number
+  className?: string
+  tcsaLevel: string
+  control?: string
+  subControl?: string
+  subsidiary?: string
+  tcsaType: string
+  accountName?: string
+  accountType?: string
+  isSubsidiaryRefundPrimaryAccount?: boolean
+  description?: string
+  walletName: string
+  walletType: string
+  walletCode: string
+  createdBy?: string
+  approvedBy?: string
+  approvedOn?: Date
+  createdTimestamp?: Date
+  updatedBy?: string
+  updatedTimestamp?: Date
+  parkedByLevel?: string
+  parkedByUserCode?: string
+  nextApproverLevel?: string
+  nextApproverUserType?: string
+  status?: string
+  rejectedBy?: string
+  remarks?: string
+  createdByUserCode?: string
+  isEnabled?: boolean
+  lastApprovedUserCode?: string
+  lastApprovedUserType?: string
+  lastApproverLevel?: string
+  approvalCode?: string
+  bankName: string
+  branchName?: string
+  routingNumber?: number
+  bankAccountName: string
+  bankAccountNumber: string
+  balance?: number
+  taggedGl?: string
+  taggedGlName?: string
+  isRefundAllowed?: boolean
+  isLiftingAllowed?: boolean
+  refundAccountType?: string
+  categoryCode?: string
+}
+
+export type TTCSABankAccount = {
+  id: number
+  className?: string
+  tcsaLevel: string
+  control?: string
+  subControl?: string
+  subsidiary?: string
+  tcsaType: string
+  accountName?: string
+  accountType?: string
+  isSubsidiaryRefundPrimaryAccount?: boolean
+  description?: string
+  walletName: string
+  walletType: string
+  walletCode: string
+  createdBy?: string
+  approvedBy?: string
+  approvedOn?: Date
+  createdTimestamp?: Date
+  updatedBy?: string
+  updatedTimestamp?: Date
+  parkedByLevel?: string
+  parkedByUserCode?: string
+  nextApproverLevel?: string
+  nextApproverUserType?: string
+  status?: string
+  rejectedBy?: string
+  remarks?: string
+  createdByUserCode?: string
+  isEnabled?: boolean
+  lastApprovedUserCode?: string
+  lastApprovedUserType?: string
+  lastApproverLevel?: string
+  approvalCode?: string
+  bankName?: string
+  branchName?: string
+  routingNumber?: number
+  bankAccountName: string
+  bankAccountNumber: string
+  balance?: number
+  taggedGl?: string
+  taggedGlName?: string
+  isRefundAllowed?: boolean
+  isLiftingAllowed?: boolean
+  refundAccountType?: string
+  categoryCode?: string
+}
+
+export type OperationBank = {
+  bankAccountNumber?: string
+  bankName?: string
+  branchName?: string
+  creationDate?: string
+  opexBankId?: number
+  routingNo?: string
+  updationDate?: string
+}
+
+export type TSystemSubControl = {
+  subControl?: string
+  subsidiary?: string
+  tcsaType?: string
+  accountName?: string
+  accountType?: string
+  walletName?: string
+  walletType?: string
+  walletCode?: string
+  bankName?: string
+  bankAccountName?: string
+  bankAccountNumber?: string
+  subControlwalletName?: string
+}

@@ -1,0 +1,12 @@
+@use "variables.scss" as v;
+.basic_details_form_buttons {
+  button {
+    // width: 150px;
+    height: 36px;
+    font-size: 14px;
+    font-family: Poppins;
+    &:disabled {
+      color: v.$grey5;
+    }
+  }
+}

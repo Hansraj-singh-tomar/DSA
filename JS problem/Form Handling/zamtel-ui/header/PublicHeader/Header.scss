@@ -1,0 +1,84 @@
+@use "style.scss" as v;
+
+.custom-app-bar {
+  &_header_logo {
+    position: relative;
+    left: 100px;
+    width: 111px;
+    height: 47px;
+    background: transparent 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+  &_header_logo_auth {
+    width: 95px;
+    height: 40px;
+    top: 10px;
+    left: 10px;
+    position: absolute;
+    background: transparent 0% 0% no-repeat padding-box;
+    opacity: 1;
+  }
+
+  &_lang_en {
+    position: relative;
+    width: 49px;
+    height: 20px;
+    /* UI Properties */
+    text-align: left;
+    font: normal normal normal 14px/21px Poppins;
+    letter-spacing: 0px;
+    color: v.$black3;
+    opacity: 1;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &_lang_en_active {
+    width: 50px;
+    font: inherit;
+    color: v.$black5;
+  }
+
+  &_lang_bn {
+    position: relative;
+    padding: 0 50px 0 0;
+    width: 49px;
+    height: 20px;
+    /* UI Properties */
+    text-align: left;
+    font: normal normal normal 14px/21px Poppins;
+    letter-spacing: 0px;
+    color: v.$black3;
+    opacity: 1;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &_lang_bn_active {
+    width: 50px;
+    font: inherit;
+    color: v.$black5;
+  }
+}
+
+/* For responsive */
+
+// @media only screen and (max-width: 500px) {
+//   .header_logo {
+//     left: 30px;
+//   }
+// }
+
+// @media only screen and (max-width: 450px) {
+//   .header_logo_auth {
+//     display: none;
+//   }
+
+//   .header_menu {
+//     left: 20px;
+//   }
+// }

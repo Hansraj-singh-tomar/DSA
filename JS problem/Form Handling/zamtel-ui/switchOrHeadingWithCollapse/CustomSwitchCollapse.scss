@@ -1,0 +1,34 @@
+.collapse-border {
+  border: 1px solid #0000001a;
+  opacity: 1;
+}
+
+.collapse-top-border {
+  border-top: 1px solid #0000001a;
+}
+
+.all-circular-edge-border {
+  border-radius: 6px;
+}
+
+.border-none {
+  border: "none";
+}
+
+.left-circular-edge-border {
+  border-radius: 6px 0px 0px 6px;
+}
+
+.hr-divider {
+  border: 1px solid #0000001a;
+  opacity: 1;
+  margin: unset;
+}
+
+.arrow-rotate {
+  transform: rotate(180deg);
+}
+.arrow-right {
+  transform: rotate(270deg);
+  cursor: pointer;
+}

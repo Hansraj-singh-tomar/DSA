@@ -1,0 +1,41 @@
+@use "src/style.scss" as v;
+.icon {
+  color: v.$color-primary;
+}
+
+.edit {
+  color: v.$color-primary;
+  text-decoration: none;
+}
+
+.tableHeadCell {
+  padding: 9px !important;
+  text-align: left;
+  // font: normal normal 500 12px/20px Poppins !important;
+  letter-spacing: 0px;
+  color: #00000099 !important;
+}
+
+.indicator {
+  height: 6px !important;
+  width: 6px !important;
+  border: 1px solid;
+  border-radius: 50% !important;
+  &green {
+    background: #009943 0% 0% no-repeat padding-box !important;
+  }
+  &red {
+    background: #ed1c24 0% 0% no-repeat padding-box !important;
+  }
+  &blue {
+    background: #49a8de 0% 0% no-repeat padding-box !important;
+  }
+  &yellow {
+    background: #fdb913 0% 0% no-repeat padding-box !important;
+  }
+  &grey {
+    background: #8d8d8d 0% 0% no-repeat padding-box !important;
+  }
+
+  // cursor: default !important;
+}

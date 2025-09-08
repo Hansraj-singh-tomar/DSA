@@ -1,0 +1,26 @@
+.pdf-container {
+  border: 1px dashed #939598;
+  border-radius: 8px;
+  opacity: 1;
+  position: relative;
+  height: 375px;
+  &_closeicon {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+  &_object {
+    height: 100%;
+    object {
+      height: 100%;
+    }
+  }
+}
+
+.image-container {
+  border: 1px solid #00000033;
+  border-radius: 8px;
+  opacity: 1;
+  position: relative;
+  height: 300px;
+}
