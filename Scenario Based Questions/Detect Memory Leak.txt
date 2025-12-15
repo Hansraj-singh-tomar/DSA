@@ -1,0 +1,15 @@
+✅ What is a Memory Leak in an SPA?
+
+1. A memory leak happens when your app keeps consuming more RAM over time and never frees it — often caused by:
+
+2. Uncleaned event listeners
+
+3. Unsubscribed WebSocket/SSE listeners
+
+4. Timers (setInterval / setTimeout) not clearedf
+
+5. React components not unmounting properly
+
+6. Large data references hanging around in closures
+
+7. Growing caches (Redux, SWR, React Query, custom caches)

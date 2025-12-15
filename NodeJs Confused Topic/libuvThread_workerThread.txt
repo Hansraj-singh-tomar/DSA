@@ -1,0 +1,46 @@
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                      │
+│     LIBUV THREADS                          WORKER THREADS                           │
+│     ─────────────                          ──────────────                           │
+│                                                                                      │
+│     ❌ You CANNOT use directly             ✅ You CAN use directly                  │
+│                                                                                      │
+│     • Internal to Node.js                  • Created by YOU                         │
+│     • Used automatically for:              • Run YOUR JavaScript code               │
+│       - fs.readFile()                      • require('worker_threads')              │
+│       - crypto operations                                                           │
+│       - dns.lookup()                                                                │
+│       - zlib compression                                                            │
+│                                                                                      │
+│     • You have NO control                  • You have FULL control                  │
+│                                                                                      │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+
+                    IF YOU WANT TO RUN YOUR CODE IN PARALLEL:
+
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │                                                                     │
+    │    ❌  WRONG: "I'll use libuv threads"                             │
+    │                                                                     │
+    │        → You can't! They only handle Node's internal I/O           │
+    │                                                                     │
+    │    ✅  CORRECT: "I'll use Worker Threads"                          │
+    │                                                                     │
+    │        const { Worker } = require('worker_threads');               │
+    │        const worker = new Worker('./myCode.js');                   │
+    │                                                                     │
+    └─────────────────────────────────────────────────────────────────────┘
+
+Simple Rule:
+         Want to do this?	            Use this
+1. Read files, crypto, DNS, zlib	|    Libuv (automatic, no action needed)
+2. Run YOUR JavaScript in parallel	|    Worker Threads (you create manually)
+
+
+// This AUTOMATICALLY uses libuv thread pool (you don't do anything)
+fs.readFile('file.txt', callback);  // ← Libuv handles it
+
+// This is how YOU run code in parallel
+const { Worker } = require('worker_threads');
+const worker = new Worker('./heavyTask.js');  // ← Your code runs here

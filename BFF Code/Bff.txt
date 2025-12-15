@@ -1,0 +1,1360 @@
+I'll help you understand this NestJS codebase and show you how to convert it to Express. Let me first explore the key files to understand the structure.
+
+Now I have a full understanding of your NestJS BFF codebase. Let me create a complete Express.js equivalent that's much easier to understand.
+
+## NestJS vs Express Concept Mapping
+
+| NestJS | Express Equivalent |
+|--------|-------------------|
+| `@Module()` | Just import and organize files |
+| `@Controller()` | Express Router |
+| `@Injectable()` Service | Regular class/function |
+| `@Get()`, `@Post()` | `router.get()`, `router.post()` |
+| `Middleware` | `app.use()` middleware |
+| `ExceptionFilter` | Error handler middleware |
+| `Interceptor` | Middleware (before/after) |
+| `ConfigService` | `process.env` or `dotenv` |
+
+---
+
+## Complete Express.js Equivalent
+
+Here's your BFF converted to Express:
+
+### Project Structure
+```
+express-bff/
+├── src/
+│   ├── app.js                    # Main entry point
+│   ├── config/
+│   │   └── index.js              # Environment config
+│   ├── constants/
+│   │   ├── index.js
+│   │   ├── url.constants.js
+│   │   ├── headers.constants.js
+│   │   └── env.enums.js
+│   ├── middleware/
+│   │   ├── requestMiddleware.js  # Request ID middleware
+│   │   ├── errorHandler.js       # Global error handler
+│   │   └── encryptionMiddleware.js
+│   ├── services/
+│   │   ├── apiResolver.js        # HTTP client wrapper
+│   │   ├── encryptionService.js
+│   │   └── jsonProcessService.js
+│   ├── routes/
+│   │   ├── index.js              # Route aggregator
+│   │   ├── auth.routes.js
+│   │   ├── redirect.routes.js
+│   │   ├── health.routes.js
+│   │   └── download.routes.js
+│   ├── utils/
+│   │   ├── utils.js
+│   │   └── curlLogger.js
+│   └── logger/
+│       └── logger.js
+├── package.json
+└── .env
+```
+
+---
+
+### 1. `package.json`
+
+```json
+{
+  "name": "zamtel-express-bff",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "form-data": "^4.0.0",
+    "multer": "^1.4.5-lts.1",
+    "pako": "^2.1.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.14.1",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+```
+
+---
+
+### 2. `src/app.js` (Main Entry - replaces `main.ts` + `app.module.ts`)
+
+```javascript
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+
+// Import middleware
+const { requestMiddleware } = require('./middleware/requestMiddleware');
+const { errorHandler } = require('./middleware/errorHandler');
+
+// Import routes
+const routes = require('./routes');
+
+// Import logger
+const logger = require('./logger/logger');
+
+const app = express();
+
+// ===============================
+// MIDDLEWARE SETUP
+// ===============================
+
+// Enable CORS
+app.use(cors());
+
+// Parse JSON with 50mb limit (same as NestJS config)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Request ID middleware (attaches unique ID to each request)
+app.use(requestMiddleware);
+
+// ===============================
+// ROUTES
+// ===============================
+
+// All routes prefixed with /api/bo_bff (same as NestJS API_PREFIX)
+app.use('/api/bo_bff', routes);
+
+// ===============================
+// ERROR HANDLING
+// ===============================
+
+// Global error handler (replaces NestJS AllExceptionsFilter)
+app.use(errorHandler);
+
+// ===============================
+// START SERVER
+// ===============================
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  logger.info(`Server is running on port: ${PORT}`);
+  console.log(`Server is running on port: ${PORT}`);
+});
+
+module.exports = app;
+```
+
+---
+
+### 3. `src/constants/url.constants.js`
+
+```javascript
+module.exports = {
+  AUTH: 'auth',
+  BFF: 'bff',
+  V1: 'v1',
+  RETRIEVE_TOKEN: 'retrieve-token',
+  REFRESH_TOKEN: 'refresh-token',
+  LOGIN: 'login',
+  CONNECT: 'connect',
+  HEALTH: 'health',
+  LLA_ROLE_MATRIX: 'rolematrix',
+  CREATE_USER: 'create-user',
+  UPDATE_USER: 'update-user',
+  GET_USER_DETAILS: 'get-user-detail',
+  GET_USER_LIST: 'get-user-list',
+  GET_USER_PORTAL: 'get-user-portal',
+  GET_USER_ROLE_LIST: 'get-user-role-list',
+  RESET_PASSWORD: 'reset-password',
+  CREATE_PASSWORD: 'create-password',
+  VALIDATE_USER_PASSWORD: 'validate-user-password',
+  CHECK_USER_MIGRATED: 'check-user-migrated',
+  ACTUATOR_HEALTH: 'actuator/health',
+  API_PREFIX: 'api/bo_bff',
+  ENCRYPT: 'encrypt',
+  DECRYPT: 'decrypt',
+  SECRET: 'secret',
+  RSA: 'rsa',
+  AES: 'aes',
+  REQUEST: 'request',
+  UPLOAD: 'upload',
+  RESET_PASSWOR_NEW: 'reset-password-new',
+  FETCH_COUNTRY_LANGUAGES: 'fetch-country-languages',
+  API: 'api',
+  REDIS: 'redis',
+  GET_VALUE: 'get_value',
+  SET_VALUE: 'set_value',
+  DOWNLOAD: 'download',
+};
+```
+
+---
+
+### 4. `src/constants/headers.constants.js`
+
+```javascript
+module.exports = {
+  DIGITAL_KEY: 'digitalkey',
+  BFF_URI: 'x-bff-uri',
+};
+```
+
+---
+
+### 5. `src/constants/index.js`
+
+```javascript
+const URL_CONSTANTS = require('./url.constants');
+const HEADER_CONSTANTS = require('./headers.constants');
+
+module.exports = {
+  URL_CONSTANTS,
+  HEADER_CONSTANTS,
+};
+```
+
+---
+
+### 6. `src/logger/logger.js` (replaces `logger.options.ts`)
+
+```javascript
+const winston = require('winston');
+require('winston-daily-rotate-file');
+
+const dailyRotateFileTransport = (level) => {
+  return new winston.transports.DailyRotateFile({
+    filename: `${process.env.LOGS_PATH || './logs'}/%DATE%/bobff.${level}.log`,
+    datePattern: 'YYYY/MM/DD',
+    zippedArchive: true,
+    maxSize: '20m',
+    maxFiles: '14d',
+    level: level,
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.printf(({ timestamp, message, level }) => {
+        return `[${timestamp}] - ${level}: ${message}`;
+      })
+    ),
+  });
+};
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp(),
+        winston.format.printf(({ timestamp, level, message }) => {
+          return `[${timestamp}] - ${level}: ${message}`;
+        })
+      ),
+    }),
+    dailyRotateFileTransport('info'),
+    dailyRotateFileTransport('error'),
+    dailyRotateFileTransport('debug'),
+  ],
+});
+
+module.exports = logger;
+```
+
+---
+
+### 7. `src/middleware/requestMiddleware.js` (replaces `RequestMiddleware.ts`)
+
+```javascript
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../logger/logger');
+
+/**
+ * Middleware to attach unique request ID to each request
+ * This is equivalent to NestJS RequestMiddleware
+ */
+const requestMiddleware = (req, res, next) => {
+  const requestId = uuidv4();
+  req.headers['requestId'] = requestId;
+  
+  logger.info(`Request received with request id: ${requestId} and url: ${req.originalUrl}`);
+  
+  next();
+};
+
+module.exports = { requestMiddleware };
+```
+
+---
+
+### 8. `src/middleware/errorHandler.js` (replaces `GlobalException.filter.ts`)
+
+```javascript
+const { HEADER_CONSTANTS } = require('../constants');
+const logger = require('../logger/logger');
+
+/**
+ * Global error handler middleware
+ * This is equivalent to NestJS AllExceptionsFilter
+ */
+const errorHandler = (err, req, res, next) => {
+  const statusCode = err.statusCode || err.status || 500;
+  const message = err.message || 'Internal Server Error';
+
+  logger.error(
+    `Request encountered exception in BO BFF with request URL ${req.url} and error message: ${message}`
+  );
+
+  const responsePayload = {
+    message,
+    status: 'FAILURE',
+    checksum: '',
+    responseCode: 5070,
+    data: null,
+    digitalKey: '',
+    path: req.headers[HEADER_CONSTANTS.BFF_URI] || req.url,
+  };
+
+  res.status(statusCode).json(responsePayload);
+};
+
+module.exports = { errorHandler };
+```
+
+---
+
+### 9. `src/utils/utils.js` (replaces `utils.ts`)
+
+```javascript
+const crypto = require('crypto');
+
+/**
+ * Sanitize headers - remove unwanted headers before forwarding
+ */
+const sanitizeHeaders = (headers) => {
+  const sanitizedHeaders = {};
+  const excludeHeaders = ['host', 'content-length', 'connection', 'upgrade'];
+
+  Object.keys(headers).forEach((key) => {
+    const lowerKey = key.toLowerCase();
+
+    // Skip excluded headers
+    if (excludeHeaders.includes(lowerKey)) {
+      return;
+    }
+
+    // Special handling for authorization header
+    if (lowerKey === 'authorization') {
+      const authValue = headers[key];
+      if (typeof authValue === 'string') {
+        if (authValue.startsWith('Bearer ') || authValue.startsWith('Basic ') || authValue.includes('=')) {
+          sanitizedHeaders[key] = authValue;
+        }
+      }
+      return;
+    }
+
+    sanitizedHeaders[key] = headers[key];
+  });
+
+  return sanitizedHeaders;
+};
+
+/**
+ * Get boolean value from string
+ */
+const getBooleanValue = (value) => {
+  return value === 'true';
+};
+
+/**
+ * Process payload for checksum calculation
+ */
+const processPayloadForChecksum = (payload) => {
+  let sortedPayload = '';
+  
+  if (Array.isArray(payload)) {
+    payload.forEach((item) => {
+      if (typeof item === 'object' && item !== null) {
+        sortedPayload += processPayloadForChecksum(item);
+      }
+    });
+  } else if (payload instanceof Date) {
+    sortedPayload += payload.toISOString();
+  } else {
+    Object.keys(payload)
+      .sort()
+      .forEach((key) => {
+        if (
+          !['imageids', 'checksum', 'digitalkey', 'data'].includes(key.toLowerCase()) &&
+          payload[key] !== null &&
+          payload[key] !== undefined
+        ) {
+          if (typeof payload[key] === 'object') {
+            sortedPayload += processPayloadForChecksum(payload[key]);
+          } else {
+            sortedPayload += payload[key];
+          }
+        }
+      });
+  }
+  return sortedPayload;
+};
+
+/**
+ * Generate checksum for payload
+ */
+const getChecksum = (payload, aesKey, countryCode) => {
+  let sortedPayload = aesKey;
+  if (payload !== null && payload !== undefined) {
+    sortedPayload += processPayloadForChecksum(payload);
+  }
+  sortedPayload += countryCode;
+  return crypto.createHash('sha256').update(sortedPayload).digest('hex');
+};
+
+module.exports = {
+  sanitizeHeaders,
+  getBooleanValue,
+  getChecksum,
+};
+```
+
+---
+
+### 10. `src/utils/curlLogger.js`
+
+```javascript
+/**
+ * Generate cURL command from axios config (for debugging)
+ */
+const generateCurlCommand = (config) => {
+  const method = (config.method || 'GET').toUpperCase();
+  const url = config.baseURL ? `${config.baseURL}${config.url}` : config.url;
+
+  const headers = Object.entries(config.headers || {})
+    .filter(([key]) => !['authorization'].includes(key.toLowerCase()))
+    .map(([key, value]) => `-H '${key}: ${value}'`)
+    .join(' ');
+
+  let data = '';
+  if (config.data) {
+    try {
+      data = `--data '${JSON.stringify(config.data)}'`;
+    } catch {
+      data = `--data '[Unserializable body]'`;
+    }
+  }
+
+  return `curl -X ${method} '${url}' ${headers} ${data}`.trim();
+};
+
+module.exports = { generateCurlCommand };
+```
+
+---
+
+### 11. `src/services/apiResolver.js` (replaces `ApiResolver.ts`)
+
+```javascript
+const axios = require('axios');
+const https = require('https');
+const logger = require('../logger/logger');
+const { sanitizeHeaders } = require('../utils/utils');
+const { generateCurlCommand } = require('../utils/curlLogger');
+
+/**
+ * API Resolver - HTTP client wrapper for making requests to backend services
+ * This is equivalent to NestJS ApiResolver service
+ */
+class ApiResolver {
+  constructor() {
+    // Create axios instance with default config
+    this.httpClient = axios.create({
+      timeout: 30000,
+      maxRedirects: 5,
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false, // Disable SSL verification for dev
+        keepAlive: true,
+      }),
+    });
+  }
+
+  /**
+   * Resolve the full URL based on app name
+   */
+  resolveUrl(uri, appName) {
+    const splittedUris = uri.split('/');
+    let baseUrl = '';
+
+    if (appName?.toLowerCase() === 'loyalty') {
+      baseUrl = 'https://zamtel-dev.finnomo.com/api/loyalty-lla';
+    } else if (appName?.toLowerCase() === 'zamtel-bo') {
+      baseUrl = 'https://stg.zamtelkwacha.co.zm';
+    } else if (appName?.toLowerCase() === 'zamtel-merchant') {
+      baseUrl = `http://oclzamtel-${splittedUris[2]}-svc.stage.svc.cluster.local:8080`;
+    }
+
+    return `${baseUrl}${splittedUris.join('/')}`;
+  }
+
+  /**
+   * Process and clean headers before sending
+   */
+  processHeaders(headers) {
+    if (headers) {
+      delete headers.host;
+      delete headers['content-length'];
+
+      // Sanitize authorization header
+      if (headers.authorization && typeof headers.authorization === 'string') {
+        const authHeader = headers.authorization;
+        if (!authHeader.startsWith('Bearer ') && !authHeader.startsWith('Basic ') && !authHeader.includes('=')) {
+          logger.warn(`Removing malformed authorization header`);
+          delete headers.authorization;
+        }
+      }
+    }
+    return headers;
+  }
+
+  /**
+   * GET request
+   */
+  async get(uri, options = {}, isRedirect = false) {
+    this.processHeaders(options.headers);
+    const appName = options.headers?.['appName'] || options.headers?.['AppName'] || options.headers?.['appname'];
+    const url = isRedirect ? uri : this.resolveUrl(uri, appName);
+    const requestId = options.headers?.['requestId'];
+
+    logger.info(`${requestId} - hitting GET request with URL: ${url}`);
+
+    try {
+      const response = await this.httpClient.get(url, {
+        headers: sanitizeHeaders(options.headers || {}),
+      });
+      return response.data;
+    } catch (error) {
+      this.handleError(error, requestId);
+    }
+  }
+
+  /**
+   * POST request
+   */
+  async post(uri, body, options = {}) {
+    this.processHeaders(options.headers);
+    const appName = options.headers?.['appName'] || options.headers?.['AppName'] || options.headers?.['appname'];
+    const url = this.resolveUrl(uri, appName);
+    const requestId = options.headers?.['requestId'];
+
+    const config = {
+      method: 'POST',
+      url: url,
+      headers: sanitizeHeaders(options.headers || {}),
+      data: body,
+    };
+
+    // Log cURL command for debugging
+    const curl = generateCurlCommand(config);
+    logger.info(`${requestId} - Outgoing Request:\n========= CURL LOG =========\n${curl}\n===========================`);
+
+    try {
+      const response = await this.httpClient.post(url, body, {
+        headers: sanitizeHeaders(options.headers || {}),
+      });
+      return response.data;
+    } catch (error) {
+      this.handleError(error, requestId);
+    }
+  }
+
+  /**
+   * PUT request
+   */
+  async put(uri, body, options = {}) {
+    this.processHeaders(options.headers);
+    const appName = options.headers?.['appName'] || options.headers?.['AppName'] || options.headers?.['appname'];
+    const url = this.resolveUrl(uri, appName);
+    const requestId = options.headers?.['requestId'];
+
+    logger.info(`${requestId} - hitting PUT request with URL: ${url}`);
+
+    try {
+      const response = await this.httpClient.put(url, body, {
+        headers: sanitizeHeaders(options.headers || {}),
+      });
+      return response.data;
+    } catch (error) {
+      this.handleError(error, requestId);
+    }
+  }
+
+  /**
+   * Download file
+   */
+  async download(uri, options = {}, method = 'POST', requestBody = null) {
+    this.processHeaders(options.headers);
+    const appName = options.headers?.['appName'] || options.headers?.['AppName'] || options.headers?.['appname'];
+    const url = this.resolveUrl(uri, appName);
+    const requestId = options.headers?.['requestId'];
+
+    logger.info(`${requestId} - hitting DOWNLOAD ${method} request with URL: ${url}`);
+
+    const downloadOptions = {
+      headers: sanitizeHeaders(options.headers || {}),
+      responseType: 'arraybuffer',
+      timeout: 30000,
+    };
+
+    try {
+      let response;
+      if (method === 'POST') {
+        response = await this.httpClient.post(url, requestBody, downloadOptions);
+      } else {
+        response = await this.httpClient.get(url, downloadOptions);
+      }
+
+      return {
+        data: Buffer.from(response.data),
+        headers: response.headers,
+      };
+    } catch (error) {
+      this.handleError(error, requestId);
+    }
+  }
+
+  /**
+   * Handle errors from API calls
+   */
+  handleError(error, requestId) {
+    if (error.response) {
+      const errorMessage =
+        error.response.data?.message ||
+        error.response.data?.error ||
+        error.response.statusText ||
+        `HTTP ${error.response.status} Error`;
+
+      logger.error(`${requestId} - exception from ${error.response.config?.url} with status ${error.response.status}: ${errorMessage}`);
+
+      const err = new Error(errorMessage);
+      err.statusCode = error.response.status;
+      throw err;
+    } else {
+      logger.error(`${requestId} - exception: ${error.message}`);
+      throw error;
+    }
+  }
+}
+
+// Export singleton instance
+module.exports = new ApiResolver();
+```
+
+---
+
+### 12. `src/services/encryptionService.js`
+
+```javascript
+const crypto = require('crypto');
+const logger = require('../logger/logger');
+
+/**
+ * Encryption Service - handles AES and RSA encryption/decryption
+ */
+class EncryptionService {
+  generateAesKey() {
+    return crypto.randomBytes(16).toString('base64');
+  }
+
+  decryptWithRSA(encryptedData, key) {
+    const buffer = Buffer.from(encryptedData, 'base64');
+    const decrypted = crypto.privateDecrypt(
+      {
+        key,
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      },
+      buffer
+    );
+    return decrypted.toString('utf8');
+  }
+
+  encryptWithRSA(data, privateKey) {
+    const buffer = Buffer.from(data, 'utf8');
+    const encrypted = crypto.publicEncrypt(
+      {
+        key: privateKey,
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      },
+      buffer
+    );
+    return encrypted.toString('base64');
+  }
+
+  encryptWithAES(text, key) {
+    try {
+      const cipher = crypto.createCipheriv('aes-128-ecb', Buffer.from(key, 'base64'), null);
+      return cipher.update(text, 'utf8', 'base64') + cipher.final('base64');
+    } catch (error) {
+      logger.error(`Error in AES encryption, key: ${key} value: ${text}`);
+      return text;
+    }
+  }
+
+  decryptWithAES(ciphertext, key) {
+    try {
+      const decipher = crypto.createDecipheriv('aes-128-ecb', Buffer.from(key, 'base64'), null);
+      return decipher.update(ciphertext, 'base64', 'utf8') + decipher.final('utf8');
+    } catch (error) {
+      logger.error(`Error in AES decryption`);
+      return ciphertext;
+    }
+  }
+}
+
+module.exports = new EncryptionService();
+```
+
+---
+
+### 13. `src/services/jsonProcessService.js`
+
+```javascript
+const CryptoJS = require('crypto-js');
+const pako = require('pako');
+const logger = require('../logger/logger');
+
+/**
+ * JSON Process Service - handles encryption/decryption of JSON payloads
+ */
+class JsonProcessService {
+  /**
+   * Encrypt data using AES-CBC with compression
+   */
+  encryptData(data) {
+    const compressed = pako.gzip(JSON.stringify(data));
+    const compressedBase64 = Buffer.from(compressed).toString('base64');
+    const SECRET_KEY = process.env.SECRET_KEY;
+
+    const iv = CryptoJS.lib.WordArray.random(16);
+    const encrypted = CryptoJS.AES.encrypt(
+      compressedBase64,
+      CryptoJS.enc.Utf8.parse(SECRET_KEY),
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+
+    return {
+      iv: CryptoJS.enc.Hex.stringify(iv),
+      ciphertext: encrypted.ciphertext.toString(CryptoJS.enc.Base64),
+    };
+  }
+
+  /**
+   * Decrypt data using AES-CBC
+   */
+  decryptData(cipherText) {
+    if (cipherText === null || cipherText === undefined || cipherText === '' || typeof cipherText !== 'object') {
+      return cipherText;
+    }
+
+    const SECRET_KEY = process.env.SECRET_KEY;
+    const iv = CryptoJS.enc.Hex.parse(cipherText?.digitalKey);
+    const bytes = CryptoJS.AES.decrypt(
+      cipherText?.payload,
+      CryptoJS.enc.Utf8.parse(SECRET_KEY),
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  }
+}
+
+module.exports = new JsonProcessService();
+```
+
+---
+
+### 14. `src/middleware/encryptionMiddleware.js` (replaces `RequestResponseInterceptor.ts`)
+
+```javascript
+const logger = require('../logger/logger');
+const jsonProcessService = require('../services/jsonProcessService');
+const encryptionService = require('../services/encryptionService');
+const { getBooleanValue } = require('../utils/utils');
+
+/**
+ * Encryption/Decryption Middleware
+ * This replaces the NestJS RequestResponseInterceptor
+ */
+const encryptionMiddleware = (req, res, next) => {
+  const requestId = req.headers['requestId'];
+  const contentType = req.headers['content-type'];
+  const startTime = Date.now();
+
+  // Skip for upload/download requests
+  const isUploadRequest = req.url.includes('/upload') || 
+    contentType?.includes('multipart/form-data') ||
+    contentType?.includes('application/octet-stream');
+  const isDownloadRequest = req.url.includes('/download');
+
+  if (isUploadRequest || isDownloadRequest) {
+    logger.info(`${requestId} - Skipping encryption/decryption for ${isUploadRequest ? 'upload' : 'download'} request`);
+    return next();
+  }
+
+  const requestEncryption = process.env.REQUEST_ENCRYPTION;
+  const responseEncryption = process.env.RESPONSE_ENCRYPTION;
+  const isGetRequest = req.method === 'GET';
+
+  // Decrypt request body if encryption is enabled and not a GET request
+  if (getBooleanValue(requestEncryption) && contentType?.includes('json') && !isGetRequest) {
+    try {
+      const decryptedBody = jsonProcessService.decryptData(req.body);
+      req.body = decryptedBody;
+      logger.info(`${requestId} - Request body decrypted: ${JSON.stringify(req.body)}`);
+    } catch (error) {
+      logger.error(`${requestId} - Failed to decrypt request body: ${error.message}`);
+    }
+  }
+
+  // Store original json method to intercept response
+  const originalJson = res.json.bind(res);
+
+  res.json = (data) => {
+    // Add status if not present
+    if (data && typeof data === 'object') {
+      data.status = data.status || 'SUCCESS';
+      data.statusCode = data.statusCode || res.statusCode;
+    }
+
+    // Encrypt response if enabled
+    if (getBooleanValue(responseEncryption)) {
+      try {
+        const encryptedData = jsonProcessService.encryptData(data);
+        const responseData = {
+          data: encryptedData?.ciphertext,
+          status: data.status || 'SUCCESS',
+          statusCode: data.statusCode || res.statusCode,
+          digitalKey: encryptedData?.iv,
+        };
+        data = responseData;
+      } catch (error) {
+        logger.error(`${requestId} - Failed to encrypt response: ${error.message}`);
+      }
+    }
+
+    logger.info(`${requestId} - Processed response body: ${JSON.stringify(data)}`);
+
+    const processingTime = Date.now() - startTime;
+    logger.info(`${requestId} - Time taken: ${processingTime} ms`);
+
+    return originalJson(data);
+  };
+
+  next();
+};
+
+module.exports = { encryptionMiddleware };
+```
+
+---
+
+### 15. `src/routes/auth.routes.js` (replaces `auth.controller.ts` + `auth.service.ts`)
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const apiResolver = require('../services/apiResolver');
+const { URL_CONSTANTS, HEADER_CONSTANTS } = require('../constants');
+const { sanitizeHeaders } = require('../utils/utils');
+const logger = require('../logger/logger');
+
+/**
+ * POST /connect/auth/login
+ */
+router.post('/login', async (req, res, next) => {
+  try {
+    const result = await apiResolver.post(
+      `/${URL_CONSTANTS.API}/${URL_CONSTANTS.AUTH}/${URL_CONSTANTS.V1}/${URL_CONSTANTS.RETRIEVE_TOKEN}`,
+      req.body,
+      { headers: req.headers }
+    );
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect/auth/refresh-token
+ */
+router.post('/refresh-token', async (req, res, next) => {
+  try {
+    const result = await apiResolver.post(
+      `/${URL_CONSTANTS.API}/${URL_CONSTANTS.AUTH}/${URL_CONSTANTS.V1}/${URL_CONSTANTS.REFRESH_TOKEN}`,
+      req.body,
+      { headers: sanitizeHeaders(req.headers) }
+    );
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect/auth/reset-password-new
+ */
+router.post('/reset-password-new', async (req, res, next) => {
+  try {
+    if (!req.body.userName) {
+      return res.status(400).json({ message: 'Username is required', status: 'FAILURE' });
+    }
+
+    // First, get user details
+    const response = await apiResolver.post(
+      `/${URL_CONSTANTS.API}/${URL_CONSTANTS.LLA_ROLE_MATRIX}/${URL_CONSTANTS.GET_USER_LIST}`,
+      {
+        userName: req.body.userName,
+        pageNo: 0,
+        pageSize: 10,
+        approvalStatusList: ['APPROVED', 'PENDING', 'REJECTED'],
+      },
+      { headers: sanitizeHeaders(req.headers) }
+    );
+
+    const userData = response?.data?.results;
+
+    if (userData && Array.isArray(userData) && userData.length > 0) {
+      const user = userData[0];
+      const updateUserData = {
+        userId: user.userId,
+        userName: user.userName,
+        employeeId: user.employeeId,
+        emailId: user.emailId,
+        phoneNo: user.phoneNo,
+        designationId: user.designationId,
+        departmentId: user.departmentId,
+        roleIds: user.roleIdList,
+        country: user.country,
+        isActive: user.active,
+        forcedPasswordResetMode: true,
+        expiredPasswordResetMode: null,
+        userDetails: null,
+      };
+
+      const updateResponse = await apiResolver.put(
+        `/${URL_CONSTANTS.API}/${URL_CONSTANTS.LLA_ROLE_MATRIX}/${URL_CONSTANTS.UPDATE_USER}`,
+        updateUserData,
+        { headers: req.headers }
+      );
+      res.json(updateResponse);
+    } else {
+      res.status(404).json({ message: 'User not found', status: 'FAILURE' });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect/auth/create-password
+ */
+router.post('/create-password', async (req, res, next) => {
+  try {
+    const result = await apiResolver.post(
+      `/${URL_CONSTANTS.API}/${URL_CONSTANTS.LLA_ROLE_MATRIX}/${URL_CONSTANTS.RESET_PASSWORD}`,
+      req.body,
+      { headers: req.headers }
+    );
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect/auth/fetch-country-languages
+ */
+router.post('/fetch-country-languages', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const result = await apiResolver.post(uri, req.body, { headers: req.headers });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;
+```
+
+---
+
+### 16. `src/routes/redirect.routes.js` (replaces `redirect.controller.ts` + `redirect.service.ts`)
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const FormData = require('form-data');
+const apiResolver = require('../services/apiResolver');
+const { HEADER_CONSTANTS } = require('../constants');
+const { sanitizeHeaders } = require('../utils/utils');
+const logger = require('../logger/logger');
+
+// Configure multer for file uploads
+const upload = multer({
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+});
+
+/**
+ * GET /connect - Generic GET redirect
+ */
+router.get('/', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in GET request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    logger.info(`${requestId} - inside redirect GET service with URI: ${uri}`);
+
+    const result = await apiResolver.get(uri, { headers: sanitizeHeaders(req.headers) });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect - Generic POST redirect
+ */
+router.post('/', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in POST request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    logger.info(`${requestId} - inside redirect POST service with URI: ${uri}`);
+
+    const result = await apiResolver.post(uri, req.body, { headers: sanitizeHeaders(req.headers) });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /connect/upload - File upload redirect
+ */
+router.post('/upload', upload.single('file'), async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in POST FILE request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    logger.info(`${requestId} - inside redirect POST FILE service with URI: ${uri}`);
+
+    const formData = new FormData();
+
+    // Add body parameters to form data
+    if (req.body && typeof req.body === 'object') {
+      for (const key in req.body) {
+        if (req.body[key] !== undefined && req.body[key] !== null) {
+          formData.append(key, req.body[key]);
+        }
+      }
+    }
+
+    // Add file to form data
+    if (req.file && req.file.buffer) {
+      formData.append('file', req.file.buffer, req.file.originalname);
+    }
+
+    const result = await apiResolver.post(uri, formData, { 
+      headers: {
+        ...sanitizeHeaders(req.headers),
+        ...formData.getHeaders(),
+      } 
+    });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * PUT /connect - Generic PUT redirect
+ */
+router.put('/', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in PUT request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    logger.info(`${requestId} - inside redirect PUT service with URI: ${uri}`);
+
+    const result = await apiResolver.put(uri, req.body, { headers: sanitizeHeaders(req.headers) });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;
+```
+
+---
+
+### 17. `src/routes/download.routes.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const apiResolver = require('../services/apiResolver');
+const { HEADER_CONSTANTS } = require('../constants');
+const { sanitizeHeaders } = require('../utils/utils');
+const logger = require('../logger/logger');
+
+/**
+ * GET /download - File download (GET method)
+ */
+router.get('/', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in DOWNLOAD request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    const downloadResponse = await apiResolver.download(
+      uri,
+      { headers: sanitizeHeaders(req.headers) },
+      'GET'
+    );
+
+    // Set response headers from backend
+    if (downloadResponse.headers['content-type']) {
+      res.setHeader('Content-Type', downloadResponse.headers['content-type']);
+    }
+    if (downloadResponse.headers['content-disposition']) {
+      res.setHeader('Content-Disposition', downloadResponse.headers['content-disposition']);
+    }
+
+    res.send(downloadResponse.data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /download - File download (POST method)
+ */
+router.post('/', async (req, res, next) => {
+  try {
+    const uri = req.headers[HEADER_CONSTANTS.BFF_URI];
+    const requestId = req.headers['requestId'];
+
+    if (!uri) {
+      logger.error(`${requestId} - Missing BFF_URI header in DOWNLOAD request`);
+      throw new Error('Missing BFF_URI header');
+    }
+
+    const downloadResponse = await apiResolver.download(
+      uri,
+      { headers: sanitizeHeaders(req.headers) },
+      'POST',
+      req.body
+    );
+
+    // Set response headers from backend
+    if (downloadResponse.headers['content-type']) {
+      res.setHeader('Content-Type', downloadResponse.headers['content-type']);
+    }
+    if (downloadResponse.headers['content-disposition']) {
+      res.setHeader('Content-Disposition', downloadResponse.headers['content-disposition']);
+    }
+
+    res.send(downloadResponse.data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;
+```
+
+---
+
+### 18. `src/routes/health.routes.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
+
+/**
+ * GET /health - Health check endpoint
+ */
+router.get('/', async (req, res) => {
+  try {
+    const checks = await Promise.allSettled([
+      axios.get(`${process.env.API_BASE_URL}/api/metac-rolematrix/actuator/health`, { timeout: 5000 }),
+      axios.get(`${process.env.API_BASE_URL}/api/llacms/actuator/health`, { timeout: 5000 }),
+    ]);
+
+    const results = {
+      status: 'ok',
+      details: {
+        rolematrix: checks[0].status === 'fulfilled' ? 'up' : 'down',
+        cms: checks[1].status === 'fulfilled' ? 'up' : 'down',
+      },
+    };
+
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+/**
+ * GET /health/recaptcha - Check reCAPTCHA connectivity
+ */
+router.get('/recaptcha', async (req, res) => {
+  try {
+    const response = await axios.get('https://www.google.com/recaptcha/enterprise.js', {
+      timeout: 10000,
+    });
+
+    res.json({
+      status: 'ok',
+      message: 'reCAPTCHA service is accessible',
+      statusCode: response.status,
+    });
+  } catch (error) {
+    res.json({
+      status: 'error',
+      message: 'reCAPTCHA service is not accessible',
+      error: error.message,
+      details: 'This may indicate network connectivity issues or firewall restrictions',
+    });
+  }
+});
+
+module.exports = router;
+```
+
+---
+
+### 19. `src/routes/index.js` (Route Aggregator)
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+const { encryptionMiddleware } = require('../middleware/encryptionMiddleware');
+
+// Import route modules
+const authRoutes = require('./auth.routes');
+const redirectRoutes = require('./redirect.routes');
+const healthRoutes = require('./health.routes');
+const downloadRoutes = require('./download.routes');
+
+// Apply encryption middleware to connect routes
+router.use('/connect', encryptionMiddleware);
+
+// Mount routes
+router.use('/connect/auth', authRoutes);    // Auth routes: /api/bo_bff/connect/auth/*
+router.use('/connect', redirectRoutes);     // Redirect routes: /api/bo_bff/connect/*
+router.use('/health', healthRoutes);        // Health routes: /api/bo_bff/health/*
+router.use('/download', downloadRoutes);    // Download routes: /api/bo_bff/download/*
+
+module.exports = router;
+```
+
+---
+
+### 20. `.env` (Environment Variables)
+
+```env
+PORT=8080
+NODE_ENV=dev
+API_BASE_URL=https://stg.zamtelkwacha.co.zm
+LOGS_PATH=./logs
+
+# Encryption settings
+REQUEST_ENCRYPTION=false
+RESPONSE_ENCRYPTION=false
+SECRET_KEY=your-secret-key-here
+FULL_REQ_ENCRYPTION=false
+FULL_RES_ENCRYPTION=false
+```
+
+---
+
+## Key Differences Explained
+
+| NestJS Concept | Express Equivalent |
+|---------------|-------------------|
+| `@Injectable()` decorator | Not needed - just export a class/object |
+| `@Controller('path')` | `const router = express.Router()` |
+| `@Get()`, `@Post()` decorators | `router.get()`, `router.post()` |
+| `@Req() request` | `req` parameter in route handler |
+| `@Body()` | `req.body` |
+| `@Headers()` | `req.headers` |
+| `ConfigService.get()` | `process.env.VARIABLE_NAME` |
+| Module imports | `require()` / `import` |
+| Dependency Injection | Just import and use directly |
+| Interceptors | Middleware functions |
+| Exception Filters | Error handler middleware |
+| Pipes (validation) | Use `express-validator` library |
+
+---
+
+## How to Run
+
+```bash
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+
+# Run in production
+npm start
+```
+
+This Express version is functionally equivalent to your NestJS BFF but much simpler to understand! Each file has a clear, single purpose and there's no "magic" happening with decorators and dependency injection.
