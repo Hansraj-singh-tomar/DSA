@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Router</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #eee;
+    }
+    nav {
+      background: rgba(255,255,255,0.05);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    nav a {
+      color: #64ffda;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: #ff6b6b; }
+    #app {
+      padding: 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { margin-bottom: 1rem; color: #64ffda; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#/">Home</a>
+    <a href="#/about">About</a>
+    <a href="#/contact">Contact</a>
+    <a href="#/users/123">User 123</a>
+  </nav>
+  <div id="app"></div>
+
+  <script>
+    class HashRouter {
+      constructor() {
+        this.routes = {};
+        this.notFoundHandler = () => '<h1>404 - Not Found</h1>';
+        
+        // Listen for hash changes
+        window.addEventListener('hashchange', () => this.handleRouteChange());
+        window.addEventListener('DOMContentLoaded', () => this.handleRouteChange());
+      }
+
+      // Register a route with a handler
+      route(path, handler) {
+        this.routes[path] = handler;
+        return this; // Allow chaining
+      }
+
+      // Set 404 handler
+      notFound(handler) {
+        this.notFoundHandler = handler;
+        return this;
+      }
+
+      // Parse the current hash and extract path + params
+      parseHash() {
+        const hash = window.location.hash.slice(1) || '/';
+        return hash;
+      }
+
+      // Match route with dynamic segments (e.g., /users/:id)
+      matchRoute(path) {
+        for (const [routePath, handler] of Object.entries(this.routes)) {
+          const params = this.extractParams(routePath, path);
+          if (params !== null) {
+            return { handler, params };
+          }
+        }
+        return null;
+      }
+
+      // Extract params from dynamic routes
+      extractParams(routePath, actualPath) {
+        const routeParts = routePath.split('/');
+        const pathParts = actualPath.split('/');
+
+        if (routeParts.length !== pathParts.length) return null;
+
+        const params = {};
+        for (let i = 0; i < routeParts.length; i++) {
+          if (routeParts[i].startsWith(':')) {
+            // Dynamic segment
+            params[routeParts[i].slice(1)] = pathParts[i];
+          } else if (routeParts[i] !== pathParts[i]) {
+            return null;
+          }
+        }
+        return params;
+      }
+
+      // Handle route changes
+      handleRouteChange() {
+        const path = this.parseHash();
+        const match = this.matchRoute(path);
+
+        // Update active link styling
+        document.querySelectorAll('nav a').forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${path}`);
+        });
+
+        const app = document.getElementById('app');
+        if (match) {
+          app.innerHTML = match.handler(match.params);
+        } else {
+          app.innerHTML = this.notFoundHandler();
+        }
+      }
+
+      // Programmatic navigation
+      navigate(path) {
+        window.location.hash = path;
+      }
+    }
+
+    // Initialize router and define routes
+    const router = new HashRouter();
+
+    router
+      .route('/', () => `
+        <h1>🏠 Home</h1>
+        <p>Welcome to the Hash Router demo!</p>
+        <p>Click the navigation links above to see routing in action.</p>
+      `)
+      .route('/about', () => `
+        <h1>📖 About</h1>
+        <p>This router uses the URL hash for navigation.</p>
+        <p>Benefits: Works without server config, supports browser back/forward.</p>
+      `)
+      .route('/contact', () => `
+        <h1>📧 Contact</h1>
+        <p>Get in touch at hello@example.com</p>
+      `)
+      .route('/users/:id', (params) => `
+        <h1>👤 User Profile</h1>
+        <p>Viewing user with ID: <strong>${params.id}</strong></p>
+        <p>Dynamic route parameters work!</p>
+      `)
+      .notFound(() => `
+        <h1>🚫 404 - Page Not Found</h1>
+        <p>The page you're looking for doesn't exist.</p>
+      `);
+  </script>
+</body>
+</html>
