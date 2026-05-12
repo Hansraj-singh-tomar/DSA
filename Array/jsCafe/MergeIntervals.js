@@ -3,14 +3,14 @@ function mergeIntervals(intervals) {
     let pair = intervals[0];
     let result = [];
     for (let interval of intervals) {
-        if (pair[1] >= interval[0]) {
-            pair[1] = Math.max(interval[1], pair[1])
+        if (pair[1] >= interval[0]) { // Overlapping intervals
+            pair[1] = Math.max(interval[1], pair[1]) // Merge the intervals
         } else {
-            result.push(pair);
-            pair = interval;
+            result.push(pair); // Non-overlapping intervals
+            pair = interval; // Update the pair to the next interval
         }
     }
-    result.push(pair)
+    result.push(pair) // Push the last pair to the result
     return result;
 }
 

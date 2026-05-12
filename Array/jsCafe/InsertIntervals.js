@@ -2,18 +2,18 @@ function insertInterval(intervals, newInterval) {
     let result = [];
     for (let interval of intervals) {
         // will check right most 
-        if (interval[1] < newInterval[0]) {
+        if (interval[1] < newInterval[0]) { // No overlapping intervals
             result.push(interval)
-        } else if (interval[0] > newInterval[1]) {
+        } else if (interval[0] > newInterval[1]) { // No overlapping intervals
             result.push(newInterval)
-            newInterval = interval
+            newInterval = interval // Update the newInterval to the next interval
         } else {
-            newInterval[0] = Math.min(newInterval[0], interval[0]);
-            newInterval[1] = Math.max(interval[1], newInterval[1]);
+            newInterval[0] = Math.min(newInterval[0], interval[0]); // Update the newInterval to the next interval
+            newInterval[1] = Math.max(interval[1], newInterval[1]); // Merge the intervals
         }
     }
 
-    result.push(newInterval);
+    result.push(newInterval); // Push the last newInterval to the result
     return result;
 }
 
