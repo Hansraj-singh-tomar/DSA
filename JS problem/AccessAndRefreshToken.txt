@@ -1,0 +1,144 @@
+you should NOT send the refresh token with every request.
+Only the access token is sent with normal API requests.
+1️⃣ User Logs In
+Server returns:
+{
+ "accessToken": "abc123",
+ "refreshToken": "xyz789"
+}
+
+Usually stored as:
+Access token → memory/local storage
+Refresh token → HttpOnly cookie (recommended)
+
+2️⃣ Normal API Request
+Client sends only access token
+Example: GET /api/profile
+Authorization: Bearer accessToken
+Refresh token is not sent.
+
+3️⃣ Access Token Expires
+Server returns: 401 Unauthorized
+Now client calls refresh endpoint: POST /auth/refresh
+Here the refresh token is used (usually automatically via cookie).
+Server verifies refresh token and sends:
+{"accessToken": "newAccessToken"}
+
+4️⃣ Client Retries Original Request
+Now client retries the original API request using the new access token.
+
+🏗 Real Production Setup
+Frontend:
+React
+Axios interceptor handles token refresh
+
+Backend:
+Express
+JWT verification middleware
+
+🔧 Typical Axios Interceptor Flow
+axios.interceptors.response.use(
+  res => res,
+  async (error) => {
+    if (error.response.status === 401) {
+      await refreshToken();
+      return axios(error.config);
+    }
+  }
+);
+
+1️⃣ What credentials: "include" Actually Does
+credentials: "include"
+The browser sends cookies with the request.
+Example cookie: Set-Cookie: refreshToken=xyz123; HttpOnly; Secure
+So the browser automatically sends: Cookie: refreshToken=xyz123
+
+But this does NOT mean the refresh token is being used.
+The refresh token is only used by the server when calling /auth/refresh.
+
+6️⃣ If You Want To Avoid Sending Refresh Cookie
+You can restrict the cookie path:
+Set-Cookie:
+refreshToken=xyz;
+HttpOnly;
+Secure;
+Path=/auth/refresh
+
+Now browser sends cookie ONLY for the refresh endpoint.
+
+POST /auth/refresh → cookie sent
+GET /api/profile → cookie NOT sent
+
+This is a very secure pattern used in production systems.
+
+
+-------------------------
+
+1️⃣ Handling multiple requests when the access token expires.
+
+This is a very important real-world problem in authentication systems.
+
+The problem happens when multiple API requests are sent while the access token is expired.
+
+Example:
+10 API requests sent
+Access token expired
+All requests get 401
+All 10 requests call /refresh
+
+Now server receives 10 refresh requests ❌
+This is called refresh storm.
+
+🚨 Problem Visualization
+Request 1 → 401
+Request 2 → 401
+Request 3 → 401
+Request 4 → 401
+Request 5 → 401
+
+Without protection:
+Request 1 → /refresh
+Request 2 → /refresh
+Request 3 → /refresh
+Request 4 → /refresh
+Request 5 → /refresh
+
+Server load increases and tokens can become inconsistent.
+
+✅ Correct Solution
+Use:
+Single refresh request
+Queue all pending requests
+Retry them after refresh
+
+🧠 Flow
+Request A → 401
+Request B → 401
+Request C → 401
+
+System behavior:
+A triggers refresh
+B waits
+C waits
+After refresh: new access token generated
+
+Queued requests retry:
+B retry
+C retry
+
+
+🚀 What This Code Achieves
+
+If 10 requests fail at the same time:
+
+Request 1 → starts refresh
+Request 2 → waits
+Request 3 → waits
+Request 4 → waits
+
+After refresh: 
+- new token generated
+- queue resolved
+- all requests retry
+
+Only ONE refresh request happens.

@@ -1,0 +1,59 @@
+// authMiddleware.js
+import jwt from "jsonwebtoken";
+import { redisClient } from "./redisClient.js";
+
+export const authMiddleware = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return res.status(401).json({ message: "No token" });
+
+  // 🔥 Check blacklist
+  const isBlacklisted = await redisClient.get(token);
+
+  if (isBlacklisted) {
+    return res.status(401).json({ message: "Token is blacklisted" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
+------------------
+
+// logout.js
+import jwt from "jsonwebtoken";
+import { redisClient } from "./redisClient.js";
+
+export const logout = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return res.sendStatus(204);
+
+  // Decode to get expiry
+  const decoded = jwt.decode(token);
+
+  const expiry = decoded.exp - Math.floor(Date.now() / 1000);
+
+  // 🔥 Store in Redis with expiry
+  await redisClient.set(token, "blacklisted", {
+    EX: expiry,
+  });
+
+  res.json({ message: "Logged out successfully" });
+};
+
+🚀 If You Want Next Level
+I can show you:
+🔥 Production-grade auth (access + refresh + rotation + versioning)
+
+⚡ Implement tokenVersion in Node.js (code)
+
+🧠 Secure admin-level logout (instant revoke)
+
+🏗 Hybrid JWT + Redis architecture
