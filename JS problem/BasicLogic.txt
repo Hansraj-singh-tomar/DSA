@@ -2,3 +2,107 @@ let max = Math.max(1,2,3)
 
 for the boolean 
 let num =  T || F;
+
+----------------------------------------------------------
+
+Double exclamation (!!) ka purpose hai kisi bhi value ko boolean me convert karna.
+ return x
+exp -
+ !!1 -> true
+ !!null -> false
+ !!true ->  true
+
+----------------------------------------------------------
+
+// Output Based Question 
+
+class Counter {
+  constructor() {
+    this.count = 0;
+  }
+  handleClick() {
+    console.log(this.count);
+  }
+}
+const c = new Counter();
+const btnHandler = c.handleClick;
+btnHandler(); 
+
+----------------------------------------------------------
+
+function makeTimers() {
+  for (var i = 0; i < 3; i++) {
+  
+    setTimeout(() => console.log(i), 100);
+  }
+}
+makeTimers();
+
+Output :  3 3 3 
+Output 0 1 2 if we changed eto let
+
+----------------------------------------------------------
+
+const userIds = [1, 2, 3];
+
+function fetchUsers() {
+
+  const results = [];
+
+  userIds.forEach(async (id) => {
+    const res = await fakeFetch(id);
+    results.push(res);
+  });
+
+  console.log(results);   / 
+
+  console.log("done");
+}
+
+function fakeFetch(id) {
+  return new Promise((resolve) =>
+    setTimeout(() => resolve(user-${id}), 100)
+  );
+}
+
+fetchUsers();
+
+
+done
+[]
+
+
+----------------------------------------------------------
+
+function UserSearch({ users }) {
+ 
+ const [query, setQuery] = useState("");
+  
+const [filtered, setFiltered] = useState(users);
+  
+useEffect(() => {
+    setFiltered(
+      users.filter((u) => u.name.includes(query))
+    );
+  });
+  
+  return (
+    <div>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <ul>
+        {filtered.map((u) => (
+          <li>{u.name}</li>   // missing key
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+----------------------------------------------------------
+
+const orders = [
+  { customer: "A", amount: 10 },
+  { customer: "B", amount: 5 },
+  { customer: "A", amount: 7 },
+];
+// expected: { A: 17, B: 5 }
