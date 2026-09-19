@@ -1,0 +1,47 @@
+{
+  "updatedAt": "2026-07-07T00:00:00Z",
+  "products": [
+    {
+      "id": "p1",
+      "name": "Wireless Earbuds",
+      "price": 2499,
+      "category": "Electronics",
+      "emoji": "🎧"
+    },
+    {
+      "id": "p2",
+      "name": "Running Shoes",
+      "price": 3999,
+      "category": "Fashion",
+      "emoji": "👟"
+    },
+    {
+      "id": "p3",
+      "name": "Coffee Maker",
+      "price": 5499,
+      "category": "Home",
+      "emoji": "☕"
+    },
+    {
+      "id": "p4",
+      "name": "Backpack",
+      "price": 1899,
+      "category": "Accessories",
+      "emoji": "🎒"
+    },
+    {
+      "id": "p5",
+      "name": "Smart Watch",
+      "price": 7999,
+      "category": "Electronics",
+      "emoji": "⌚"
+    },
+    {
+      "id": "p6",
+      "name": "Yoga Mat",
+      "price": 999,
+      "category": "Fitness",
+      "emoji": "🧘"
+    }
+  ]
+}

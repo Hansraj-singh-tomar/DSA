@@ -13,6 +13,22 @@ class EventBus {
       this.events[event].forEach(fn => fn(data));
     }
   }
+
+  // unsubscribe add karna helpful hota hai
+unsubscribe(event, fn) {
+  if (this.events[event]) {
+    this.events[event] = this.events[event].filter(f => f !== fn);
+  }
+}
+
+// ek baar listen karne ke liye
+once(event, fn) {
+  const wrapper = (data) => {
+    fn(data);
+    this.unsubscribe(event, wrapper);
+  };
+  this.subscribe(event, wrapper);
+}
 }
 
 // Usage
