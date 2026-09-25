@@ -7,6 +7,38 @@ let list = [
     { name: "hjk", id: 1 }
 ];
 
+let demo = list.filter((item) => {
+   return false  
+})
+
+console.log("demo reult", demo); // []
+
+// ------------------------------------------------------------
+
+let seen = new Set();
+
+const result = list.filter((item) => {
+  let key = JSON.stringify(item);
+
+  if(seen.has(key)){
+    return false;
+  }
+
+  seen.add(key)
+  return true;
+})
+
+console.log(result);
+
+// ----------------------------------------------------------------
+
+let list = [
+    { name: "abc", id: 2 },
+    { name: "abc", id: 2 },
+    { name: "bhk", id: 3 },
+    { name: "hjk", id: 1 }
+];
+
 const uniqueList = list.filter((item, index, self) =>
     index === self.findIndex((t) => (
         t.id === item.id && t.name === item.name
