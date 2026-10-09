@@ -22,6 +22,25 @@ const data = {
     }
 }
 
+// ---------------------------------------- Optimize solution -------------------------------------------------------
+
+function demo(obj, countPlayer){
+    if(obj == null) return;
+  
+    for(let player of obj.name){
+      countPlayer[player] = (countPlayer[player] || 0) + 1;
+    }
+  
+    demo(obj.next, countPlayer);    
+}
+
+let countPlayer = {};
+demo(data, countPlayer);
+
+console.log(countPlayer);
+
+// -----------------------------------------------------------------------------------------------
+
 const playerCount = (data) => {
     if (data === null) {
         return {}
