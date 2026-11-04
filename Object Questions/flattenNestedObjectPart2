@@ -1,0 +1,23 @@
+
+function objectToString(obj) {
+  const key = Object.keys(obj)[0];
+
+  if (typeof obj[key] !== "object" || obj[key] === null) {
+    return `${key}.${obj[key]}`;
+  }
+
+  return `${key}.${objectToString(obj[key])}`;
+}
+
+const input = {
+  a: {
+    b: {
+      c: {
+        d: "e"
+      }
+    }
+  }
+};
+
+console.log(objectToString(input));
+// a.b.c.d.e
