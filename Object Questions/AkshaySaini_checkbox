@@ -1,0 +1,104 @@
+import {useState} from 'react'
+import "./styles.css";
+
+const CheckboxesData = [
+  {
+    id: 1,
+    label: "Fruits",
+    children: [
+      { id: 2, label: "Apple" },
+      { id: 3, label: "Banana" },
+      {
+        id: 4,
+        label: "Citrus",
+        children: [
+          { id: 5, label: "Orange" },
+          { id: 6, label: "Lemon" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 7,
+    label: "Vegetables",
+    children: [
+      { id: 8, label: "Carrot" },
+      { id: 9, label: "Broccoli" },
+    ],
+  },
+  { id: 10, label: "Kiwi" },  
+];
+
+const CheckBoxes = ({data, checked, setChecked}) => {
+  
+  function handleCheckboxChanged(e, node){
+    setChecked((prev) => {
+      let newState = {...prev, [node.id]: e.target.checked}
+
+      // Now top to bottom approach 
+      const updateChild = (node) => {
+        {
+          node?.children?.forEach((child) => {
+            newState[child.id] = e.target.checked
+            child?.children && updateChild(child);
+          })
+        }
+      }
+      
+      updateChild(node);
+
+      // Now bottom to top approach
+
+      const verifyChild = (node) => {
+        if(!node?.children) return newState[node.id];
+
+        let allChildChecked = node?.children?.every((child) => verifyChild(child));
+
+        newState[node.id] = allChildChecked;
+        return allChildChecked
+      }
+
+      // right approach - Array.every stops at the first false.
+      // verifyChild(Apple) returns false → Banana and Citrus are never visited → newState[4] never gets set from the bottom-up pass.
+      // So Orange and Lemon can be true, but Citrus stays unchecked. Same pattern as the video, different sibling order → bug shows up in your tree only.
+      // const verifyChild = (node) => {
+      //   if (!node?.children?.length) {
+      //     return Boolean(newState[node.id]);
+      //   }
+      //   const childStates = node.children.map((child) => verifyChild(child));
+      //   const allChildChecked = childStates.every(Boolean);
+      //   newState[node.id] = allChildChecked;
+      //   return allChildChecked;
+      // };
+      
+      CheckboxesData.forEach((node) => verifyChild(node));
+
+      return newState;
+    })
+  }
+
+  return(
+    <div className="parent">
+      {data?.map((node) => {
+        return (
+          <div className="child" key={node.id}>
+            <input type="checkbox" checked={checked?.[node?.id] || false} onChange={(e) => handleCheckboxChanged(e, node)}/>
+            <span>{node.label}</span>
+            {node.children && <CheckBoxes data={node.children} checked={checked} setChecked={setChecked} />}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+export default function App() {
+  const [checked, setChecked] = useState();
+  console.log(checked);
+  return (
+    <div className="App">
+      <h1>Hello Zamtel</h1>
+      <CheckBoxes data={CheckboxesData} checked={checked} setChecked={setChecked} />
+    </div>
+  );
+}
